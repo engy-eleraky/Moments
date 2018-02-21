@@ -41,7 +41,7 @@ public class StartActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN=1;
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
-    private static final String TAG="Main_Activity";
+    private static final String TAG="Start_Activity";
     private ProgressDialog mDialogue;
 
 

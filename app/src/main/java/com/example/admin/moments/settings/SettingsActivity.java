@@ -135,7 +135,7 @@ public class SettingsActivity extends AppCompatActivity {
                            //upload photo
                 Uri resultUri = result.getUri();
                 //StorageReference filePath=mStorageRef.child("profile").child(random()+".jpg");
-                StorageReference filePath=mStorageRef.child("profile").child(mUid+".jpg");
+                StorageReference filePath=mStorageRef.child("profiles").child(mUid+".jpg");
                 filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
