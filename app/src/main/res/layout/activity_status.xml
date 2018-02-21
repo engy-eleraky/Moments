@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.admin.moments.settings.StatusActivity">
+
+    <include layout="@layout/app_bar" android:id="@+id/status_toolBar" />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/status_toolBar"
+        android:layout_marginTop="27dp"
+        android:id="@+id/textInputLayoutStatus">
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="your status" />
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:id="@+id/buttonSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/textInputLayoutStatus"
+        android:layout_marginEnd="52dp"
+        android:layout_marginTop="55dp"
+        android:text="save status"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:background="@color/colorPrimary"
+        android:padding="6dp"
+        android:textColor="@color/white"/>
+
+</RelativeLayout>

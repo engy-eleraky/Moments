@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.admin.moments.signing.StartActivity">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/layout">
+
+    </android.support.v4.view.ViewPager>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_above="@id/layout"
+        android:gravity="center_horizontal"
+        android:id="@+id/linear"
+        android:layout_marginBottom="6dp">
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/buttonReg"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/image_height"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary"
+        android:text="@string/sign"
+        android:textAllCaps="false"
+        android:textSize="@dimen/text_size" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_above="@+id/buttonReg"
+        android:id="@+id/layout">
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/buttonGoogleLog"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="@dimen/image_height"
+
+            >
+
+        </com.google.android.gms.common.SignInButton>
+
+        <Button
+            android:id="@+id/buttonLog"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="@dimen/image_height"
+            android:text="Log in"
+            android:textAllCaps="false"
+            android:background="@color/white"
+            android:textSize="@dimen/text_size"
+            android:textColor="@color/inactiveDots"/>
+    </LinearLayout>
+
+</RelativeLayout>

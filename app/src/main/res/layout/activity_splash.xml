@@ -15,18 +15,29 @@
         android:src="@drawable/icon1"
         android:scaleType="centerCrop"/>
 
-   <!-- <TextView
+    <TextView
         android:id="@+id/textView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="47dp"
-        android:text="@string/app_name"
+        android:layout_marginBottom="@dimen/margin_bottom"
+        android:layout_marginStart="@dimen/margin_start"
+        android:text="@string/welcome"
         android:textColor="@color/white"
-        android:textSize="20sp"
+        android:textSize="@dimen/text_size_welcome"
         android:textStyle="italic"
         android:theme="@style/Base.TextAppearance.AppCompat.Large.Inverse" />
 
--->
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="@dimen/image_dimen"
+        android:layout_height="@dimen/image_dimen"
+        android:layout_alignBottom="@+id/textView"
+        android:layout_marginStart="@dimen/margin_start_image"
+        android:layout_toEndOf="@+id/textView"
+        app:srcCompat="@drawable/heart"
+        android:layout_marginRight="4dp"/>
+
+
 </RelativeLayout>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--splash-->
+    <dimen name="margin_bottom">48dp</dimen>
+    <dimen name="margin_start">35dp</dimen>
+    <dimen name="text_size_welcome">20sp</dimen>
+    <dimen name="image_dimen">30dp</dimen>
+    <dimen name="margin_start_image">10dp</dimen>
+
+    <!--start-->
+    <dimen name="text_size">22sp</dimen>
+    <dimen name="image_height">60dp</dimen>
+
+    <!--tutorial-->
+    <dimen name="layout_margin_bottom">54dp</dimen>
+    <dimen name="text_size_tutorial">36sp</dimen>
+    <dimen name="text_size_tutorial_desc">30sp</dimen>
+    <dimen name="padding_left">10dp</dimen>
+    <dimen name="padding_right">2dp</dimen>
+    <dimen name="text_margin_bottom">27dp</dimen>
+    <dimen name="text_margin_start">132dp</dimen>
+
+
+
+</resources>

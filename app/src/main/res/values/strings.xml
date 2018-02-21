@@ -1,4 +1,19 @@
 <resources>
     <string name="app_name">Moments</string>
+    <string name="welcome">Welcome to Moments App....!</string>
+    <string name="sign">Sign Up</string>
 
+    <!-- slid 1 -->
+    <string name="slide_1_title">Chat</string>
+    <string name="slide_1_desc">Private messages only for you and your partner</string>
+
+
+    <!-- slid 2 -->
+    <string name="slide_2_title">Timeline</string>
+    <string name="slide_2_desc">Share moments with your partner in timeline</string>
+
+
+    <!-- slid 3 -->
+    <string name="slide_3_title">Calendar</string>
+    <string name="slide_3_desc">Stay sync. for scheduled events and get auto. notifications</string>
 </resources>
