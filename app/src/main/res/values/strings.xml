@@ -16,4 +16,6 @@
     <!-- slid 3 -->
     <string name="slide_3_title">Calendar</string>
     <string name="slide_3_desc">Stay sync. for scheduled events and get auto. notifications</string>
+
+
 </resources>

@@ -62,6 +62,7 @@ public class SettingsActivity extends AppCompatActivity {
         mUser= FirebaseAuth.getInstance().getCurrentUser();
         mUid=mUser.getUid();
         mReference= FirebaseDatabase.getInstance().getReference().child("couple").child("users").child(mUid);
+        //offline
         mReference.keepSynced(true);
         mReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -73,6 +74,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                 mName.setText(name);
                 mStatus.setText(status);
+                ///offline
                 Picasso.with(SettingsActivity.this).load(image).networkPolicy(NetworkPolicy.OFFLINE)
                         .placeholder(R.drawable.icon).into(circleImageView, new Callback() {
                     @Override

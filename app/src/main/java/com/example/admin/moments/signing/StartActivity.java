@@ -2,6 +2,8 @@ package com.example.admin.moments.signing;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -27,7 +29,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import static com.example.admin.moments.signing.RegisterActivity.USER_ID;
 
 public class StartActivity extends AppCompatActivity {
     private Button mButtonReg;
@@ -156,21 +161,38 @@ public class StartActivity extends AppCompatActivity {
                             mDialogue.dismiss();
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            Intent regIntent=new Intent(StartActivity.this,MainActivity.class);
-                            startActivity(regIntent);
-                            finish();
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            final String uid=user.getUid();
+                            ////here we should coupling code
+                            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(StartActivity.this);
+                            if (!prefs.getBoolean("firstTime", false)) {
+                                // run your one time code
+                                //fix it
+//                                Intent regIntent = new Intent(StartActivity.this, CheckActivity.class);
+//                                regIntent.putExtra(USER_ID,uid);
+//                                startActivity(regIntent);
+//                                finish();
+//                                SharedPreferences.Editor editor = prefs.edit();
+//                                editor.putBoolean("firstTime", true);
+//                                editor.apply();
+                            }
+//                            } else {
+//                                Intent regIntent = new Intent(StartActivity.this, MainActivity.class);
+//                                startActivity(regIntent);
+//                                finish();
+//                            }
+
                         } else {
                             mDialogue.hide();
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-
                         }
 
-                        // ...
-                    }
-                });
+                    }// ...
 
-    }
+                });//onadd
+
+    }//private
 
 
 

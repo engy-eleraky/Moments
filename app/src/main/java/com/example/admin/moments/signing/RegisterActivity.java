@@ -2,6 +2,8 @@ package com.example.admin.moments.signing;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
@@ -36,6 +38,8 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseDatabase mDatabase;
     private DatabaseReference mReference;
     private static final String TAG="RegisterActivity";
+    public static final String USER_ID="user_id";
+    String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +84,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
     //new user
-    private void registerUser(final String mDisplayName, String mDisplayEmail, String mDisplayPassward) {
+    private void registerUser(final String mDisplayName, final String mDisplayEmail, String mDisplayPassward) {
         mAuth.createUserWithEmailAndPassword(mDisplayEmail, mDisplayPassward)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -90,22 +94,41 @@ public class RegisterActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            String uid=user.getUid();
+                            uid=user.getUid();
                             mReference=FirebaseDatabase.getInstance().getReference().child("couple").child("users").child(uid);
+                            //implement that in google sign
                             HashMap<String,String> map=new HashMap<>();
                             map.put("name",mDisplayName);
                             map.put("status","Hi .....");
                             map.put("image","default");
                             map.put("thumbnail","default");
+                            map.put("email",mDisplayEmail);
                             mReference.setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
                                         mDialogue.dismiss();
-                                        Intent regIntent = new Intent(RegisterActivity.this, MainActivity.class);
-                                        regIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                        startActivity(regIntent);
-                                        finish();
+                                        Toast.makeText(RegisterActivity.this, "register", Toast.LENGTH_LONG).show();
+
+                                        //here we should add coupling code
+                                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(RegisterActivity.this);
+                                        if(!prefs.getBoolean("firstTime", false)) {
+                                            Toast.makeText(RegisterActivity.this, "first time", Toast.LENGTH_LONG).show();
+
+                                            // run your one time code
+                                            Intent registerIntent = new Intent(RegisterActivity.this,CheckMailingActivity .class);
+                                           // Toast.makeText(RegisterActivity.this, "welcome", Toast.LENGTH_LONG).show();
+                                            registerIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                                            // regIntent.putExtra(USER_ID,uid);
+                                            startActivity(registerIntent);
+                                            finish();
+
+                                        }
+                                        else {
+                                            Toast.makeText(RegisterActivity.this, "fail to launch", Toast.LENGTH_LONG).show();
+
+                                        }
                                     }
                                 }
                             });
