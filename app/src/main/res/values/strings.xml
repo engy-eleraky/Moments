@@ -16,6 +16,19 @@
     <!-- slid 3 -->
     <string name="slide_3_title">Calendar</string>
     <string name="slide_3_desc">Stay sync. for scheduled events and get auto. notifications</string>
+    <string name="title_activity_navigation">NavigationActivity</string>
+
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="hello_chat_fragment">Hello chat fragment</string>
+    <string name="hello_timeline_fragment">Hello timeline fragment</string>
+    <string name="hello_calendar_fragment">Hello calendar fragment</string>
+
+
 
 
 </resources>

@@ -15,8 +15,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
-import com.example.admin.moments.MainActivity;
 import com.example.admin.moments.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -62,7 +62,7 @@ public class StartActivity extends AppCompatActivity {
         mLayout=findViewById(R.id.linear);
         mDialogue=new ProgressDialog(this);
 
-                  ////////////////////////////
+        ////////////////////////////
         //we need after that to go to main activity,but if it is the first time after installation
         //we need to go code activity and generate code,send invite or enter code then go to main activity
 
@@ -115,7 +115,7 @@ public class StartActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                  createDots(position);
+                createDots(position);
             }
 
             @Override
@@ -168,19 +168,16 @@ public class StartActivity extends AppCompatActivity {
                             if (!prefs.getBoolean("firstTime", false)) {
                                 // run your one time code
                                 //fix it
-//                                Intent regIntent = new Intent(StartActivity.this, CheckActivity.class);
-//                                regIntent.putExtra(USER_ID,uid);
-//                                startActivity(regIntent);
-//                                finish();
-//                                SharedPreferences.Editor editor = prefs.edit();
-//                                editor.putBoolean("firstTime", true);
-//                                editor.apply();
+                                Intent regIntent = new Intent(StartActivity.this, CheckMailingActivity.class);
+                                // regIntent.putExtra(USER_ID,uid);
+                                regIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(regIntent);
+                                finish();
                             }
-//                            } else {
-//                                Intent regIntent = new Intent(StartActivity.this, MainActivity.class);
-//                                startActivity(regIntent);
-//                                finish();
-//                            }
+                            else {
+                                Toast.makeText(StartActivity.this, "fail to launch", Toast.LENGTH_LONG).show();
+
+                            }
 
                         } else {
                             mDialogue.hide();
@@ -197,25 +194,25 @@ public class StartActivity extends AppCompatActivity {
 
 
     private void createDots(int currentPosition){
-      if(mLayout!=null)
-          mLayout.removeAllViews();
-          dots = new ImageView[layouts.length];
-      for(int i=0;i<layouts.length;i++)
-      {
-          dots[i]=new ImageView(this);
-          if(i==currentPosition)
-          {
-            dots[i].setImageDrawable(ContextCompat.getDrawable(this,R.drawable.active_dots));
-          }
-          else{
-              dots[i].setImageDrawable(ContextCompat.getDrawable(this,R.drawable.inactive_dots));
+        if(mLayout!=null)
+            mLayout.removeAllViews();
+        dots = new ImageView[layouts.length];
+        for(int i=0;i<layouts.length;i++)
+        {
+            dots[i]=new ImageView(this);
+            if(i==currentPosition)
+            {
+                dots[i].setImageDrawable(ContextCompat.getDrawable(this,R.drawable.active_dots));
+            }
+            else{
+                dots[i].setImageDrawable(ContextCompat.getDrawable(this,R.drawable.inactive_dots));
 
-          }
-       LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-               ViewGroup.LayoutParams.WRAP_CONTENT);
-          params.setMargins(4,0,4,0);
-          mLayout.addView(dots[i],params);
-      }
+            }
+            LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(4,0,4,0);
+            mLayout.addView(dots[i],params);
+        }
 
     }
 }

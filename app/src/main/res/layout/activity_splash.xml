@@ -21,8 +21,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="@dimen/margin_bottom"
-        android:layout_marginStart="@dimen/margin_start"
+        android:layout_marginBottom="47dp"
+        android:layout_marginStart="14dp"
         android:text="@string/welcome"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_welcome"
@@ -37,7 +37,7 @@
         android:layout_marginStart="@dimen/margin_start_image"
         android:layout_toEndOf="@+id/textView"
         app:srcCompat="@drawable/heart"
-        android:layout_marginRight="4dp"/>
+        android:layout_marginRight="8dp"/>
 
 
 </RelativeLayout>

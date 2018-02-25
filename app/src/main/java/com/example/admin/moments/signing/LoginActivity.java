@@ -13,8 +13,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.admin.moments.MainActivity;
 import com.example.admin.moments.R;
+import com.example.admin.moments.navigation.NavigationActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d(TAG, "signInWithEmail:success");
                                // FirebaseUser user = mAuth.getCurrentUser();
-                                Intent logIntent=new Intent(LoginActivity.this,MainActivity.class);
+                                Intent logIntent=new Intent(LoginActivity.this,NavigationActivity.class);
                                 logIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(logIntent);
                                 finish();
