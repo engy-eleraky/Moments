@@ -1,9 +1,57 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/grey"
     tools:context="com.example.admin.moments.navigation.ChatFragment">
 
+   <android.support.v4.widget.SwipeRefreshLayout
+       android:layout_width="wrap_content"
+       android:layout_height="match_parent"
+       android:id="@+id/swipeLayout"
+       android:layout_above="@+id/linear">
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/messages_list"
+            >
+
+        </android.support.v7.widget.RecyclerView>
+   </android.support.v4.widget.SwipeRefreshLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/linear"
+        android:background="@color/white">
+
+        <ImageButton
+            android:id="@+id/PickerButton"
+            android:layout_width="36dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_add_circle_outline_black_24dp" />
+
+        <EditText
+            android:id="@+id/messageEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:hint="enter text" />
+
+        <ImageButton
+            android:id="@+id/sendButton"
+            android:layout_width="36dp"
+            android:layout_height="46dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/ic_send_black_24dp"
+            android:enabled="false"
+            android:text="" />
 
 
-</FrameLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

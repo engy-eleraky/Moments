@@ -1,4 +1,4 @@
-package com.example.admin.moments;
+package com.example.admin.moments.models;
 
 /**
  * Created by ADMIN on 2/25/2018.
@@ -7,14 +7,14 @@ package com.example.admin.moments;
 public class User {
     private String name;
     private String email;
-    private String image;
+    private String id;
 
     public User(){}
 
     public  User(String name,String email,String image){
         this.name=name;
         this.email=email;
-        this.image=image;
+
     }
 
     public String getName() {
@@ -33,11 +33,11 @@ public class User {
         this.email = email;
     }
 
-    public String getImage() {
-        return image;
+    public String getId() {
+        return id;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setId(String id) {
+        this.id = id;
     }
 }

@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "1012690036589",
-    "firebase_url": "https://moments-cbcae.firebaseio.com",
-    "project_id": "moments-cbcae",
-    "storage_bucket": "moments-cbcae.appspot.com"
+    "project_number": "295299250719",
+    "firebase_url": "https://moments-f81bf.firebaseio.com",
+    "project_id": "moments-f81bf",
+    "storage_bucket": "moments-f81bf.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1012690036589:android:7cf2fe4370122a31",
+        "mobilesdk_app_id": "1:295299250719:android:7cf2fe4370122a31",
         "android_client_info": {
           "package_name": "com.example.admin.moments"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1012690036589-ng7djoadgsge1emeha4plvj27phlfi5o.apps.googleusercontent.com",
+          "client_id": "295299250719-s0i2ogmkjimd059vbnqkhbc587e88l0h.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.admin.moments",
@@ -23,13 +23,13 @@
           }
         },
         {
-          "client_id": "1012690036589-h0i0at33fmnjhn5a7vfnr4j1jf6av4qk.apps.googleusercontent.com",
+          "client_id": "295299250719-6f193d54tjdct20cgaqlvaan2gnuenk3.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBKXlN0qO1mFZCYRSORBOApJfiw69xW8hU"
+          "current_key": "AIzaSyCmPrGyuzz8VDUNajL4E36n_W2QKEWOZ5A"
         }
       ],
       "services": {
@@ -40,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "1012690036589-h0i0at33fmnjhn5a7vfnr4j1jf6av4qk.apps.googleusercontent.com",
+              "client_id": "295299250719-6f193d54tjdct20cgaqlvaan2gnuenk3.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

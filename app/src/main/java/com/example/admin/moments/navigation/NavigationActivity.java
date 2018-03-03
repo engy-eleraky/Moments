@@ -2,7 +2,9 @@ package com.example.admin.moments.navigation;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -22,9 +24,12 @@ import android.view.ViewGroup;
 
 import com.example.admin.moments.R;
 import com.example.admin.moments.settings.SettingsActivity;
+import com.example.admin.moments.signing.CheckCodeActivity;
 import com.example.admin.moments.signing.StartActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -33,13 +38,23 @@ public class NavigationActivity extends AppCompatActivity
         CalendarFragment.OnFragmentInteractionListener {
 
     private FirebaseAuth mAuth;
-
+    private DatabaseReference mRef;
+    private String id;
+    public static String idChat1="";
+    public static final String SAVE_USERID="save_userid";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
-        mAuth = FirebaseAuth.getInstance();
+        Intent intent = getIntent();
+        id=intent.getStringExtra(CheckCodeActivity.PARTNER_ID);
+        getPreference(id);
+        idChat1= PreferenceManager.getDefaultSharedPreferences(NavigationActivity.this).getString(SAVE_USERID,"");
 
+        mAuth = FirebaseAuth.getInstance();
+        if(mAuth.getCurrentUser()!=null){
+            mRef= FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
+        }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -71,6 +86,16 @@ public class NavigationActivity extends AppCompatActivity
             startActivity(startIntent);
             finish();
         }
+//        else{
+//            mRef.child("online").setValue(true);
+//        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+      //  mRef.child("online").setValue(false);
+
     }
 
     @Override
@@ -117,13 +142,13 @@ public class NavigationActivity extends AppCompatActivity
         } else if (id == R.id.nav_calendar) {
             fragment = new CalendarFragment();
         }
-       //NOTE: Fragment changing code
+        //NOTE: Fragment changing code
         if (fragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame, fragment);
             ft.commit();
         }
-       //NOTE:  Closing the drawer after selecting
+        //NOTE:  Closing the drawer after selecting
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -131,7 +156,15 @@ public class NavigationActivity extends AppCompatActivity
 
     @Override
     public void onFragmentInteraction(String title) {
-         //NOTE:  Code to replace the toolbar title based current visible fragment
+        //NOTE:  Code to replace the toolbar title based current visible fragment
         getSupportActionBar().setTitle(title);
+    }
+
+    private void getPreference(String item){
+        //save
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(NavigationActivity.this);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(SAVE_USERID,item);
+        editor.apply();
     }
 }

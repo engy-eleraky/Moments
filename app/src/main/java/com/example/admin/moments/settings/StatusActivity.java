@@ -37,7 +37,7 @@ public class StatusActivity extends AppCompatActivity {
 
         mUser= FirebaseAuth.getInstance().getCurrentUser();
         String mUid=mUser.getUid();
-        mReference= FirebaseDatabase.getInstance().getReference().child("couple").child("users").child(mUid);
+        mReference= FirebaseDatabase.getInstance().getReference().child("Users").child(mUid);
 
          //get status from settings
         String statusValue=getIntent().getStringExtra("satus_value");

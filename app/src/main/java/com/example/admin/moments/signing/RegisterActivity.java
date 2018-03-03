@@ -94,32 +94,24 @@ public class RegisterActivity extends AppCompatActivity {
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             uid=user.getUid();
-                            mReference=FirebaseDatabase.getInstance().getReference().child("couple").child("users").child(uid);
-                            //implement that in google sign
+                            mReference=FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
                             HashMap<String,String> map=new HashMap<>();
                             map.put("name",mDisplayName);
                             map.put("status","Hi .....");
                             map.put("image","default");
                             map.put("thumbnail","default");
                             map.put("email",mDisplayEmail);
+                            map.put("id",uid);
+                           // map.put("online","true");
                             mReference.setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
                                         mDialogue.dismiss();
-                                        Toast.makeText(RegisterActivity.this, "register", Toast.LENGTH_LONG).show();
-
-                                        //here we should add coupling code
                                         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(RegisterActivity.this);
                                         if(!prefs.getBoolean("firstTime", false)) {
-                                            Toast.makeText(RegisterActivity.this, "first time", Toast.LENGTH_LONG).show();
-
-                                            // run your one time code
-                                            Intent registerIntent = new Intent(RegisterActivity.this,CheckMailingActivity .class);
-                                           // Toast.makeText(RegisterActivity.this, "welcome", Toast.LENGTH_LONG).show();
+                                            Intent registerIntent = new Intent(RegisterActivity.this,CheckCodeActivity .class);
                                             registerIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-                                            // regIntent.putExtra(USER_ID,uid);
                                             startActivity(registerIntent);
                                             finish();
 

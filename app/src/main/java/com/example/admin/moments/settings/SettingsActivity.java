@@ -29,6 +29,8 @@ import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
+//import com.theartofdev.edmodo.cropper.CropImage;
+//import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.Random;
 
@@ -61,7 +63,7 @@ public class SettingsActivity extends AppCompatActivity {
         //when data changed,retreiving data
         mUser= FirebaseAuth.getInstance().getCurrentUser();
         mUid=mUser.getUid();
-        mReference= FirebaseDatabase.getInstance().getReference().child("couple").child("users").child(mUid);
+        mReference= FirebaseDatabase.getInstance().getReference().child("Users").child(mUid);
         //offline
         mReference.keepSynced(true);
         mReference.addValueEventListener(new ValueEventListener() {
@@ -113,7 +115,7 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                // start picker to get image for cropping and then use the image in cropping activity
+                 //start picker to get image for cropping and then use the image in cropping activity
                 CropImage.activity()
                         .setAspectRatio(1,1)
                         .setGuidelines(CropImageView.Guidelines.ON)

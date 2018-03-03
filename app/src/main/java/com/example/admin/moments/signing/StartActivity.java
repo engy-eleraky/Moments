@@ -31,6 +31,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 import static com.example.admin.moments.signing.RegisterActivity.USER_ID;
 
@@ -48,6 +52,7 @@ public class StartActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private static final String TAG="Start_Activity";
     private ProgressDialog mDialogue;
+    private DatabaseReference mReference;
 
 
     @Override
@@ -61,10 +66,6 @@ public class StartActivity extends AppCompatActivity {
         mPager.setAdapter(mpagerAdapter);
         mLayout=findViewById(R.id.linear);
         mDialogue=new ProgressDialog(this);
-
-        ////////////////////////////
-        //we need after that to go to main activity,but if it is the first time after installation
-        //we need to go code activity and generate code,send invite or enter code then go to main activity
 
         mButtonReg=findViewById(R.id.buttonReg);
         mButtonReg.setOnClickListener(new View.OnClickListener() {
@@ -162,22 +163,41 @@ public class StartActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            final String uid=user.getUid();
-                            ////here we should coupling code
-                            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(StartActivity.this);
-                            if (!prefs.getBoolean("firstTime", false)) {
-                                // run your one time code
-                                //fix it
-                                Intent regIntent = new Intent(StartActivity.this, CheckMailingActivity.class);
-                                // regIntent.putExtra(USER_ID,uid);
-                                regIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(regIntent);
-                                finish();
-                            }
-                            else {
-                                Toast.makeText(StartActivity.this, "fail to launch", Toast.LENGTH_LONG).show();
+                             String uid=user.getUid();
+                             String name=user.getDisplayName();
+                             String email=user.getEmail();
 
-                            }
+                            mReference= FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+                            HashMap<String,String> map=new HashMap<>();
+                            map.put("name",name);
+                            map.put("status","Hi .....");
+                            map.put("image","default");
+                            map.put("thumbnail","default");
+                            map.put("email",email);
+                            map.put("id",uid);
+                            //map.put("online","true");
+                            mReference.setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        mDialogue.dismiss();
+                                        //if login using google?????? don't go to check
+                                        //how tp login again????????
+                                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(StartActivity.this);
+                                        if(!prefs.getBoolean("firstTime", false)) {
+                                            Intent regIntent = new Intent(StartActivity.this,CheckCodeActivity .class);
+                                            regIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            startActivity(regIntent);
+                                            finish();
+
+                                        }
+                                        else {
+                                            Toast.makeText(StartActivity.this, "fail to launch", Toast.LENGTH_LONG).show();
+
+                                        }
+                                    }
+                                }
+                            });
 
                         } else {
                             mDialogue.hide();
