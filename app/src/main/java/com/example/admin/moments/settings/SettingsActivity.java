@@ -26,6 +26,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -60,6 +61,14 @@ public class SettingsActivity extends AppCompatActivity {
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
+                /*picasso*///////????????
+   /*     Picasso.Builder builder=new Picasso.Builder(SettingsActivity.this);
+        builder.downloader(new OkHttpDownloader(SettingsActivity.this,Integer.MAX_VALUE));
+        Picasso built=builder.build();
+        built.setIndicatorsEnabled(true);
+        built.setLoggingEnabled(true);
+        Picasso.setSingletonInstance(built);*/
+
         //when data changed,retreiving data
         mUser= FirebaseAuth.getInstance().getCurrentUser();
         mUid=mUser.getUid();
@@ -76,6 +85,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                 mName.setText(name);
                 mStatus.setText(status);
+
                 ///offline
                 Picasso.with(SettingsActivity.this).load(image).networkPolicy(NetworkPolicy.OFFLINE)
                         .placeholder(R.drawable.icon).into(circleImageView, new Callback() {
@@ -166,15 +176,5 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    public static String random() {
-        Random generator = new Random();
-        StringBuilder randomStringBuilder = new StringBuilder();
-        int randomLength = generator.nextInt(16);
-        char tempChar;
-        for (int i = 0; i < randomLength; i++){
-            tempChar = (char) (generator.nextInt(96) + 32);
-            randomStringBuilder.append(tempChar);
-        }
-        return randomStringBuilder.toString();
-    }
+
 }

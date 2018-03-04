@@ -46,10 +46,8 @@ public class NavigationActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
-        Intent intent = getIntent();
-        id=intent.getStringExtra(CheckCodeActivity.PARTNER_ID);
-        getPreference(id);
-        idChat1= PreferenceManager.getDefaultSharedPreferences(NavigationActivity.this).getString(SAVE_USERID,"");
+        ///?????????????
+       // FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         mAuth = FirebaseAuth.getInstance();
         if(mAuth.getCurrentUser()!=null){
@@ -86,21 +84,10 @@ public class NavigationActivity extends AppCompatActivity
             startActivity(startIntent);
             finish();
         }
-//        else{
-//            mRef.child("online").setValue(true);
-//        }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
-//        if(currentUser!=null){
-//            mRef.child("online").setValue(false);
-//        }
-
 
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -164,11 +151,5 @@ public class NavigationActivity extends AppCompatActivity
         getSupportActionBar().setTitle(title);
     }
 
-    private void getPreference(String item){
-        //save
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(NavigationActivity.this);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(SAVE_USERID,item);
-        editor.apply();
-    }
+
 }

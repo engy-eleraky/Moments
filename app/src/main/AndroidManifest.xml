@@ -27,9 +27,9 @@
 
         <!--back button-->
         <activity android:name=".signing.RegisterActivity"
-            android:parentActivityName=".signing.StartActivity"/>
+            />
         <activity android:name=".signing.LoginActivity"
-            android:parentActivityName=".signing.StartActivity"/>
+           />
 
         <activity android:name=".settings.SettingsActivity" />
         <activity

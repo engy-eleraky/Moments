@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="90dp"
     android:padding="10dp">
 <de.hdodenhof.circleimageview.CircleImageView
     android:layout_width="56dp"
@@ -21,21 +21,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
          android:textSize="20sp"
-        android:text="TextView"
+        android:text="TextView       "
         android:id="@+id/textmessage"
         android:layout_marginLeft="5dp"
-        android:layout_margin="5dp"/>
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="2dp"/>
 
-  <!--  <TextView
+   <TextView
         android:id="@+id/time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="1dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="5dp"
         android:layout_marginLeft="10dp"
+       android:layout_marginRight="5dp"
         android:text="time"
         android:textSize="16sp" />
--->
+
 </LinearLayout>
 
 </RelativeLayout>

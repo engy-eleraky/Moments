@@ -37,21 +37,8 @@ public class OfflineCapabilities extends Application {
         mAuth=FirebaseAuth.getInstance();
         mUser=mAuth.getCurrentUser();
         if(mUser!=null){
-     mReference=FirebaseDatabase.getInstance().getReference().child("Users").child(mUser.getUid());
-//     mReference.addValueEventListener(new ValueEventListener() {
-//         @Override
-//         public void onDataChange(DataSnapshot dataSnapshot) {
-//             if(dataSnapshot!=null){
-//                 mReference.child("online").onDisconnect().setValue(false);
-          //  mReference.child("lastSeen").setValue(ServerValue.TIMESTAMP);
-//             }
-//         }
-//
-//         @Override
-//         public void onCancelled(DatabaseError databaseError) {
-//
-//         }
-//     });
+         mReference=FirebaseDatabase.getInstance().getReference().child("Users").child(mUser.getUid());
+
 
         }
 

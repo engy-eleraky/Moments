@@ -82,11 +82,11 @@ public class LoginActivity extends AppCompatActivity {
                                     Intent logIntent=new Intent(LoginActivity.this,NavigationActivity.class);
                                     logIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(logIntent);
-                                    finish();
+                                    //finish();
                                 } else {
                                     Intent intent = new Intent(LoginActivity.this, CheckCodeActivity.class);
                                     startActivity(intent);
-                                    finish();
+                                   // finish();
                                 }
 
 
