@@ -68,7 +68,6 @@ public class ChatFragment extends Fragment {
     private String mLastKey="";
     private String mPrevKey="";
     String messageNumber;
-    Messages message;
     public ChatFragment() {
     }
 
@@ -124,11 +123,8 @@ public class ChatFragment extends Fragment {
             @Override
             public void onRefresh() {
                 mCurrentPage++;
-
-                messageList.clear();
-                loadMessages();
-//                itemPos=0;
-//                loadMoreMessages();
+                itemPos=0;
+                loadMoreMessages();
 
             }
 
@@ -139,8 +135,7 @@ public class ChatFragment extends Fragment {
     }
 
     private void loadMoreMessages() {
-        ///////////////
-        //not right data loading
+
         if(mAuth.getCurrentUser()!=null ){
             mReference= FirebaseDatabase.getInstance().getReference().child("Couples");
             mUser=mAuth.getCurrentUser().getUid();
@@ -148,23 +143,10 @@ public class ChatFragment extends Fragment {
             final DatabaseReference mRefMessages=mReference.child(prefs).child("chat").child("messages");
             final Query messageQuery=mRefMessages.orderByKey().endAt(mLastKey).limitToLast(10);
 
-            messageQuery.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                    Iterator<DataSnapshot> dataSnapshot1=dataSnapshot.getChildren().iterator();
-
-                    while(dataSnapshot1.hasNext()) {
-                        message = dataSnapshot1.next().getValue(Messages.class);
-                        messageList.add(message);
-
-                    }
-                    mAdapter=new MessagesAdapter(getActivity(),messageList);
-                    mRecycle.setAdapter(mAdapter);
-
                     messageQuery.addChildEventListener(new ChildEventListener() {
                         @Override
                         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                            Messages message=dataSnapshot.getValue(Messages.class);
                             String messageKey=dataSnapshot.getKey();
                             if(!mPrevKey.equals(messageKey)){
                                 messageList.add(itemPos++,message);
@@ -175,6 +157,9 @@ public class ChatFragment extends Fragment {
                             if(itemPos==1){
                                 mLastKey=messageKey;
                             }
+                            mAdapter=new MessagesAdapter(getActivity(),messageList);
+                            mRecycle.setAdapter(mAdapter);
+                            mAdapter.notifyDataSetChanged();
                             mRefresh.setRefreshing(false);
                             mLinear.scrollToPositionWithOffset(10,0);
                         }
@@ -202,14 +187,6 @@ public class ChatFragment extends Fragment {
 
                 }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-
-
-        }
     }
 
     private void loadMessages() {
@@ -220,31 +197,21 @@ public class ChatFragment extends Fragment {
 
             mRefMessages=mReference.child(prefs).child("chat").child("messages");
             final Query messageQuery=mRefMessages.limitToLast(mCurrentPage*itemsToLoad);
-            messageQuery.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-
-                    Iterator<DataSnapshot> dataSnapshot1=dataSnapshot.getChildren().iterator();
-                    Messages messageData;
-                    while(dataSnapshot1.hasNext()) {
-                        messageData = dataSnapshot1.next().getValue(Messages.class);
-                        messageList.add(messageData);
-
-                    }
-                    mAdapter=new MessagesAdapter(getActivity(),messageList);
-                    mRecycle.setAdapter(mAdapter);
-
 
                     messageQuery.addChildEventListener(new ChildEventListener() {
                         @Override
                         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                            Messages messageData=dataSnapshot.getValue(Messages.class);
                             String messageKey=dataSnapshot.getKey();
                             itemPos++;
                             if(itemPos==1){
                                 mLastKey=messageKey;
                                 mPrevKey=messageKey;
                             }
+                            messageList.add(messageData);
+                            mAdapter=new MessagesAdapter(getActivity(),messageList);
+                            mRecycle.setAdapter(mAdapter);
+                            mAdapter.notifyDataSetChanged();
                             mRecycle.scrollToPosition(messageList.size()-1);
                             mRefresh.setRefreshing(false);
 
@@ -273,13 +240,6 @@ public class ChatFragment extends Fragment {
 
                 }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-
-        }
 
     }
 
