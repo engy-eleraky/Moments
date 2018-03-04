@@ -18,6 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.admin.moments.R;
+import com.example.admin.moments.Utils;
+import com.example.admin.moments.navigation.NavigationActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -36,8 +38,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 
-import static com.example.admin.moments.signing.RegisterActivity.USER_ID;
-
 public class StartActivity extends AppCompatActivity {
     private Button mButtonReg;
     private Button mButtonLogin;
@@ -52,7 +52,6 @@ public class StartActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private static final String TAG="Start_Activity";
     private ProgressDialog mDialogue;
-    private DatabaseReference mReference;
 
 
     @Override
@@ -163,11 +162,10 @@ public class StartActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                             String uid=user.getUid();
-                             String name=user.getDisplayName();
-                             String email=user.getEmail();
-
-                            mReference= FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+                            String uid=user.getUid();
+                            String name=user.getDisplayName();
+                            String email=user.getEmail();
+                            DatabaseReference mReference= FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
                             HashMap<String,String> map=new HashMap<>();
                             map.put("name",name);
                             map.put("status","Hi .....");
@@ -175,36 +173,38 @@ public class StartActivity extends AppCompatActivity {
                             map.put("thumbnail","default");
                             map.put("email",email);
                             map.put("id",uid);
-                            //map.put("online","true");
+                            // map.put("online","true");
                             mReference.setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        mDialogue.dismiss();
-                                        //if login using google?????? don't go to check
-                                        //how tp login again????????
+                                    if(task.isSuccessful()){
                                         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(StartActivity.this);
-                                        if(!prefs.getBoolean("firstTime", false)) {
-                                            Intent regIntent = new Intent(StartActivity.this,CheckCodeActivity .class);
+                                        if (!prefs.contains(Utils.COUPLE_KEYCODE)) {
+
+                                            Intent regIntent = new Intent(StartActivity.this, CheckCodeActivity.class);
                                             regIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                             startActivity(regIntent);
                                             finish();
-
                                         }
                                         else {
-                                            Toast.makeText(StartActivity.this, "fail to launch", Toast.LENGTH_LONG).show();
-
+                                            Intent intent = new Intent(StartActivity.this, NavigationActivity.class);
+                                            startActivity(intent);
+                                            finish();
                                         }
+                                    }else{
+                                        Toast.makeText(StartActivity.this, "fail to launch", Toast.LENGTH_LONG).show();
+
                                     }
+
                                 }
                             });
+
 
                         } else {
                             mDialogue.hide();
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                         }
-
                     }// ...
 
                 });//onadd

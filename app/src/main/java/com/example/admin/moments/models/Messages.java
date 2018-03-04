@@ -6,13 +6,14 @@ package com.example.admin.moments.models;
 
 public class Messages {
     private String messages,type,from;
-   // private long time;
+    private long time;
     private boolean seen;
-    public Messages(String messages,boolean seen,String type,String from){
+    public Messages(String messages,boolean seen,String type,String from,long time){
         this.messages=messages;
         this.seen=seen;
         this.type=type;
         this.from=from;
+        this.time=time;
     }
     public Messages(){}
 
@@ -31,14 +32,14 @@ public class Messages {
     public void setSeen(boolean seen) {
         this.seen = seen;
     }
-//
-//    public long getTime() {
-//        return time;
-//    }
-//
-//    public void setTime(long time) {
-//        this.time = time;
-//    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
 
 
     public String getType() {

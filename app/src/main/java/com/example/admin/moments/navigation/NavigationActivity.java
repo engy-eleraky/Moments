@@ -94,7 +94,11 @@ public class NavigationActivity extends AppCompatActivity
     @Override
     protected void onStop() {
         super.onStop();
-      //  mRef.child("online").setValue(false);
+//        FirebaseUser currentUser = mAuth.getCurrentUser();
+//        if(currentUser!=null){
+//            mRef.child("online").setValue(false);
+//        }
+
 
     }
 

@@ -8,20 +8,34 @@
     android:layout_height="56dp"
     android:src="@drawable/icon"
     android:id="@+id/circleImageMessage" />
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+   android:orientation="vertical"
+    android:layout_alignBottom="@+id/circleImageMessage"
+    android:layout_marginStart="80dp"
+    android:background="@drawable/messgae_text"
+    >
 
     <TextView
-        android:id="@+id/textmessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/circleImageMessage"
-        android:layout_marginBottom="17dp"
-        android:layout_marginStart="21dp"
-        android:textSize="20sp"
-        android:padding="6dp"
-        android:textColor="@color/white"
-        android:layout_toEndOf="@+id/circleImageMessage"
-        android:background="@drawable/messgae_text"
+         android:textSize="20sp"
         android:text="TextView"
-        />
+        android:id="@+id/textmessage"
+        android:layout_marginLeft="5dp"
+        android:layout_margin="5dp"/>
+
+  <!--  <TextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="1dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:text="time"
+        android:textSize="16sp" />
+-->
+</LinearLayout>
 
 </RelativeLayout>

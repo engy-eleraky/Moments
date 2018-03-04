@@ -8,4 +8,8 @@
     <color name="inactiveDots">#83878b</color>
     <color name="pink">#EF9A9A</color>
     <color name="grey">#C8E6C9</color>
+
+    <color name="transparent">#00000000</color>
+    <color name="textPrimaryColor">#000000</color>
+    <color name="shadow">#838383</color>
 </resources>

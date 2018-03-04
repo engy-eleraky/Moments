@@ -2,6 +2,7 @@ package com.example.admin.moments.signing;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.admin.moments.R;
+import com.example.admin.moments.Utils;
 import com.example.admin.moments.navigation.NavigationActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -76,10 +78,18 @@ public class LoginActivity extends AppCompatActivity {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d(TAG, "signInWithEmail:success");
                                // FirebaseUser user = mAuth.getCurrentUser();
-                                Intent logIntent=new Intent(LoginActivity.this,NavigationActivity.class);
-                                logIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(logIntent);
-                                finish();
+                                if (PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).contains(Utils.COUPLE_KEYCODE)) {
+                                    Intent logIntent=new Intent(LoginActivity.this,NavigationActivity.class);
+                                    logIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(logIntent);
+                                    finish();
+                                } else {
+                                    Intent intent = new Intent(LoginActivity.this, CheckCodeActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+
+
                             } else {
                                 mDialogue.hide();
                                 // If sign in fails, display a message to the user.

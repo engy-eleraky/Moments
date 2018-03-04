@@ -42,7 +42,8 @@ public class OfflineCapabilities extends Application {
 //         @Override
 //         public void onDataChange(DataSnapshot dataSnapshot) {
 //             if(dataSnapshot!=null){
-//                 mReference.child("online").onDisconnect().setValue(ServerValue.TIMESTAMP);
+//                 mReference.child("online").onDisconnect().setValue(false);
+          //  mReference.child("lastSeen").setValue(ServerValue.TIMESTAMP);
 //             }
 //         }
 //
