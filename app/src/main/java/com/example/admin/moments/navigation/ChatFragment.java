@@ -68,6 +68,7 @@ public class ChatFragment extends Fragment {
     private String mLastKey="";
     private String mPrevKey="";
     String messageNumber;
+    Messages message;
     public ChatFragment() {
     }
 
@@ -123,8 +124,11 @@ public class ChatFragment extends Fragment {
             @Override
             public void onRefresh() {
                 mCurrentPage++;
-                itemPos=0;
-                loadMoreMessages();
+
+                messageList.clear();
+                loadMessages();
+//                itemPos=0;
+//                loadMoreMessages();
 
             }
 
@@ -141,10 +145,60 @@ public class ChatFragment extends Fragment {
             mReference= FirebaseDatabase.getInstance().getReference().child("Couples");
             mUser=mAuth.getCurrentUser().getUid();
             String prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
-            DatabaseReference mRefMessages=mReference.child(prefs).child("chat").child("messages");
-            mRefMessages.addValueEventListener(new ValueEventListener() {
+            final DatabaseReference mRefMessages=mReference.child(prefs).child("chat").child("messages");
+            final Query messageQuery=mRefMessages.orderByKey().endAt(mLastKey).limitToLast(10);
+
+            messageQuery.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    Iterator<DataSnapshot> dataSnapshot1=dataSnapshot.getChildren().iterator();
+
+                    while(dataSnapshot1.hasNext()) {
+                        message = dataSnapshot1.next().getValue(Messages.class);
+                        messageList.add(message);
+
+                    }
+                    mAdapter=new MessagesAdapter(getActivity(),messageList);
+                    mRecycle.setAdapter(mAdapter);
+
+                    messageQuery.addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                            String messageKey=dataSnapshot.getKey();
+                            if(!mPrevKey.equals(messageKey)){
+                                messageList.add(itemPos++,message);
+
+                            }else{
+                                mPrevKey=mLastKey;
+                            }
+                            if(itemPos==1){
+                                mLastKey=messageKey;
+                            }
+                            mRefresh.setRefreshing(false);
+                            mLinear.scrollToPositionWithOffset(10,0);
+                        }
+
+                        @Override
+                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
 
                 }
 
@@ -153,52 +207,7 @@ public class ChatFragment extends Fragment {
 
                 }
             });
-//            Query messageQuery=mRefMessages.orderByKey().endAt(mLastKey).limitToLast(10);
-//            messageQuery.addChildEventListener(new ChildEventListener() {
-//                @Override
-//                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                    Messages messageData=dataSnapshot.getValue(Messages.class);
-////                    String messageKey=dataSnapshot.getKey();
-////                    if(!mPrevKey.equals(messageKey)){
-////                        messageList.add(itemPos++,messageData);
-////
-////                    }else{
-////                        mPrevKey=mLastKey;
-////                    }
-////                    if(itemPos==1){
-////                        mLastKey=messageKey;
-////                    }
-//                    messageList.add(messageData);
-//                    mAdapter=new MessagesAdapter(getActivity(),messageList);
-//                    mRecycle.setAdapter(mAdapter);
-//                    mAdapter.notifyDataSetChanged();
-//                    //goes to bottom---fix it
-//                    // mRecycle.scrollToPosition(messageList.size()-1);
-////                    mRefresh.setRefreshing(false);
-////                    mLinear.scrollToPositionWithOffset(10,0);
-//
-//                }
-//
-//                @Override
-//                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//
-//                }
-//
-//                @Override
-//                public void onChildRemoved(DataSnapshot dataSnapshot) {
-//
-//                }
-//
-//                @Override
-//                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-//
-//                }
-//
-//                @Override
-//                public void onCancelled(DatabaseError databaseError) {
-//
-//                }
-//            });
+
 
         }
     }
@@ -210,19 +219,57 @@ public class ChatFragment extends Fragment {
             String prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
 
             mRefMessages=mReference.child(prefs).child("chat").child("messages");
-            mRefMessages.addValueEventListener(new ValueEventListener() {
+            final Query messageQuery=mRefMessages.limitToLast(mCurrentPage*itemsToLoad);
+            messageQuery.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    Iterator<DataSnapshot> dataSnapshot1=dataSnapshot.getChildren().iterator();
-                    Messages message;
-                    while(dataSnapshot1.hasNext()){
-                        message=dataSnapshot1.next().getValue(Messages.class);
-                        messageList.add(message);
-                        mAdapter=new MessagesAdapter(getActivity(),messageList);
-                        mRecycle.setAdapter(mAdapter);
-                        mAdapter.notifyDataSetChanged();
-                    }
 
+
+                    Iterator<DataSnapshot> dataSnapshot1=dataSnapshot.getChildren().iterator();
+                    Messages messageData;
+                    while(dataSnapshot1.hasNext()) {
+                        messageData = dataSnapshot1.next().getValue(Messages.class);
+                        messageList.add(messageData);
+
+                    }
+                    mAdapter=new MessagesAdapter(getActivity(),messageList);
+                    mRecycle.setAdapter(mAdapter);
+
+
+                    messageQuery.addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                            String messageKey=dataSnapshot.getKey();
+                            itemPos++;
+                            if(itemPos==1){
+                                mLastKey=messageKey;
+                                mPrevKey=messageKey;
+                            }
+                            mRecycle.scrollToPosition(messageList.size()-1);
+                            mRefresh.setRefreshing(false);
+
+                        }
+
+                        @Override
+                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
 
                 }
 
@@ -279,29 +326,29 @@ public class ChatFragment extends Fragment {
 
             }
 
-            }
-
         }
 
+    }
 
-        @Override
-        public void onAttach(Context context) {
-            super.onAttach(context);
-            if (context instanceof OnFragmentInteractionListener) {
-                mListener = (OnFragmentInteractionListener) context;
-            } else {
-                throw new RuntimeException(context.toString()
-                        + " must implement OnFragmentInteractionListener");
-            }
-        }
 
-        @Override
-        public void onDetach() {
-            super.onDetach();
-            mListener = null;
-        }
-
-        public interface OnFragmentInteractionListener {
-            void onFragmentInteraction(String title );
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
         }
     }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    public interface OnFragmentInteractionListener {
+        void onFragmentInteraction(String title );
+    }
+}
