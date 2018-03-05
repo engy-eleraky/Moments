@@ -5,10 +5,10 @@ package com.example.admin.moments.models;
  */
 
 public class Messages {
-    private String messages,type,from;
-    private long time;
+    private String messages,type,from,time;
+    //private long time;
     private boolean seen;
-    public Messages(String messages,boolean seen,String type,String from,long time){
+    public Messages(String messages,boolean seen,String type,String from,String time){
         this.messages=messages;
         this.seen=seen;
         this.type=type;
@@ -33,14 +33,13 @@ public class Messages {
         this.seen = seen;
     }
 
-    public long getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(long time) {
+    public void setTime(String time) {
         this.time = time;
     }
-
 
     public String getType() {
         return type;

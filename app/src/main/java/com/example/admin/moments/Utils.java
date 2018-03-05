@@ -19,6 +19,18 @@ public class Utils {
     public static final String PARTNER2_ID = "partner2";
     public static final String ID = "id";
 
+    // Calendar
+    public static final String MOMENT_DATE_TITLE = "title";
+    public static final String MOMENT_DATE_DATE = "date";
+    public static final String MOMENT_DATE_REMIND = "remind";
+
+    // Timeline
+    public static final String MOMENT_POST = "post";
+    public static final String MOMENT_FROM = "from";
+    public static final String MOMENT_DATE = "date";
+    public static final String MOMENT_IMAGE = "image";
+
+
     // shared preference keys
     public static final String COUPLE_KEYCODE = "couple_keycode";
 

@@ -89,6 +89,7 @@ public class CheckCodeActivity extends AppCompatActivity {
                                 mReference.child(Utils.CHILD_ONWAIT).child(mCurrentUser.getUid()).removeValue();
                                 Intent intent = new Intent(CheckCodeActivity.this, NavigationActivity.class);
                                 startActivity(intent);
+                                finish();
                             }
 
 
@@ -158,6 +159,7 @@ public class CheckCodeActivity extends AppCompatActivity {
                         createNewCouple(id);
                         Intent idIntent = new Intent(CheckCodeActivity.this, NavigationActivity.class);
                         startActivity(idIntent);
+                        finish();
                         break;
                     }
                 }
@@ -311,6 +313,7 @@ public class CheckCodeActivity extends AppCompatActivity {
                             mReference.child(Utils.CHILD_ONWAIT).child(mCurrentUser.getUid()).removeValue();
                             Intent intent = new Intent(CheckCodeActivity.this, NavigationActivity.class);
                             startActivity(intent);
+                            finish();
                         }
 
 

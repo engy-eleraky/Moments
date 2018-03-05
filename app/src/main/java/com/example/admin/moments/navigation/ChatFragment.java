@@ -2,7 +2,7 @@ package com.example.admin.moments.navigation;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -17,13 +17,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 
 import com.example.admin.moments.Utils;
+import com.example.admin.moments.adapters.MessagesAdapter;
 import com.example.admin.moments.models.Messages;
 import com.example.admin.moments.R;
 import com.example.admin.moments.settings.SettingsActivity;
-import com.example.admin.moments.settings.StatusActivity;
-import com.example.admin.moments.signing.CheckCodeActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,12 +35,21 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+
+import static android.app.Activity.RESULT_OK;
 
 
 public class ChatFragment extends Fragment {
@@ -68,6 +77,9 @@ public class ChatFragment extends Fragment {
     private String mLastKey="";
     private String mPrevKey="";
     String messageNumber;
+    private static final int GALLERY_PICK=1;
+    private StorageReference mStorageRef;
+    String code;
     public ChatFragment() {
     }
 
@@ -87,6 +99,7 @@ public class ChatFragment extends Fragment {
             mListener.onFragmentInteraction("Chat");
         }
         mAuth = FirebaseAuth.getInstance();
+        mStorageRef = FirebaseStorage.getInstance().getReference();
 
         mAdd=view.findViewById(R.id.PickerButton);
         mSend=view.findViewById(R.id.sendButton);
@@ -99,7 +112,11 @@ public class ChatFragment extends Fragment {
         mRecycle.setHasFixedSize(true);
         mRecycle.setLayoutManager(mLinear);
         mRecycle.setAdapter(mAdapter);
-
+        //generate code
+        Random random = new Random();
+        for (int i = 0 ; i < 6 ; i++) {
+            code += String.valueOf(random.nextInt(10));
+        }
 
         loadMessages();
 
@@ -107,7 +124,15 @@ public class ChatFragment extends Fragment {
         mAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent galleryIntent=new Intent();
+                galleryIntent.setType("image/*");
+                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(galleryIntent,"SELECT IMAGE"),GALLERY_PICK);
 
+//                CropImage.activity()
+//                        .setAspectRatio(1,1)
+//                        .setGuidelines(CropImageView.Guidelines.ON)
+//                        .start(getActivity());
             }
         });
         // send
@@ -191,6 +216,7 @@ public class ChatFragment extends Fragment {
 
     private void loadMessages() {
         if(mAuth.getCurrentUser()!=null ){
+
             mReference= FirebaseDatabase.getInstance().getReference().child("Couples");
             mUser=mAuth.getCurrentUser().getUid();
             String prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
@@ -256,13 +282,14 @@ public class ChatFragment extends Fragment {
                         long messageNum= 1;
                         messageNum +=dataSnapshot.getChildrenCount();
                         messageNumber= String.valueOf(messageNum);
+                       String current_date= (DateFormat.getDateTimeInstance().format(new Date()));
                         mRefSendMessage=mRefSendMessage.child(messageNumber);
                         Map messageMap = new HashMap();
                         messageMap.put("messages", message);
                         messageMap.put("seen", false);
                         messageMap.put("type", "text");
                         messageMap.put("from", mUser);
-                        messageMap.put("time", ServerValue.TIMESTAMP);
+                        messageMap.put("time", current_date);
                         mRefSendMessage.setValue(messageMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
@@ -290,6 +317,63 @@ public class ChatFragment extends Fragment {
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == GALLERY_PICK && resultCode == RESULT_OK) {
+            Uri resultUri = data.getData();
+            if(mAuth.getCurrentUser()!=null){
+                mReference = FirebaseDatabase.getInstance().getReference().child("Couples");
+                String prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
+                mRefSendMessage=mReference.child(prefs).child("chat").child("messages");
+
+                StorageReference filePath=mStorageRef.child("Media").child(prefs).child(code+".jpg");
+                filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                            if(task.isSuccessful()){
+                                final String downloadUrl=task.getResult().getDownloadUrl().toString();
+                                mRefSendMessage.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        long messageNum= 1;
+                                        messageNum +=dataSnapshot.getChildrenCount();
+                                        messageNumber= String.valueOf(messageNum);
+                                        String current_date= (DateFormat.getDateTimeInstance().format(new Date()));
+                                        mRefSendMessage=mRefSendMessage.child(messageNumber);
+                                        Map messageMap = new HashMap();
+                                        messageMap.put("messages", downloadUrl);
+                                        messageMap.put("seen", false);
+                                        messageMap.put("type", "image");
+                                        messageMap.put("from", mUser);
+                                        messageMap.put("time", current_date);
+                                        mRefSendMessage.setValue(messageMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if(task.isSuccessful()){
+                                                    Log.d(TAG," add it");
+                                                }else{
+                                                    Log.d(TAG,"doesn't add it");
+                                                }
+                                            }
+                                        });
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+
+                                mText.setText("");
+
+                            }
+                    }
+                });
+            }
+        }
+    }
 
     @Override
     public void onAttach(Context context) {

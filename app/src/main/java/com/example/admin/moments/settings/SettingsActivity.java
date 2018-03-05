@@ -61,14 +61,6 @@ public class SettingsActivity extends AppCompatActivity {
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
-                /*picasso*///////????????
-   /*     Picasso.Builder builder=new Picasso.Builder(SettingsActivity.this);
-        builder.downloader(new OkHttpDownloader(SettingsActivity.this,Integer.MAX_VALUE));
-        Picasso built=builder.build();
-        built.setIndicatorsEnabled(true);
-        built.setLoggingEnabled(true);
-        Picasso.setSingletonInstance(built);*/
-
         //when data changed,retreiving data
         mUser= FirebaseAuth.getInstance().getCurrentUser();
         mUid=mUser.getUid();

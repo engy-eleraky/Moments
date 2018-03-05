@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.admin.moments.R;
 import com.example.admin.moments.Utils;
+import com.example.admin.moments.adapters.MpagerAdapter;
 import com.example.admin.moments.navigation.NavigationActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;

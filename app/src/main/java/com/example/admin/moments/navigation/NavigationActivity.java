@@ -21,37 +21,86 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.admin.moments.R;
+import com.example.admin.moments.models.MomentDate;
 import com.example.admin.moments.settings.SettingsActivity;
 import com.example.admin.moments.signing.CheckCodeActivity;
 import com.example.admin.moments.signing.StartActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         ChatFragment.OnFragmentInteractionListener,
         TimelineFragment.OnFragmentInteractionListener,
-        CalendarFragment.OnFragmentInteractionListener {
+        CalendarFragment.OnFragmentInteractionListener ,
+        CalendarFragment.OnNewDateAddedListener{
 
     private FirebaseAuth mAuth;
     private DatabaseReference mRef;
-    private String id;
-    public static String idChat1="";
-    public static final String SAVE_USERID="save_userid";
+    private NavigationView navigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
-        ///?????????????
-       // FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+         //NOTE:  Checks first item in the navigation drawer initially
+        navigationView.setCheckedItem(R.id.nav_chat);
+        View hView =  navigationView.getHeaderView(0);
+        final TextView userText=hView.findViewById(R.id.userText);
+        final TextView emailText=hView.findViewById(R.id.textView);
+        final CircleImageView circleImageView=hView.findViewById(R.id.imageUser);
 
         mAuth = FirebaseAuth.getInstance();
         if(mAuth.getCurrentUser()!=null){
             mRef= FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
+            mRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String name=dataSnapshot.child("name").getValue().toString();
+                    final String image=dataSnapshot.child("image").getValue().toString();
+                    String email=dataSnapshot.child("email").getValue().toString();
+                    userText.setText(name);
+                    emailText.setText(email);
+
+                    ///offline
+                    Picasso.with(NavigationActivity.this).load(image).networkPolicy(NetworkPolicy.OFFLINE)
+                            .placeholder(R.drawable.icon).into(circleImageView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError() {
+
+
+                            Picasso.with(NavigationActivity.this).load(image).placeholder(R.drawable.icon).into(circleImageView);
+                        }
+                    });
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
         }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -62,11 +111,7 @@ public class NavigationActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
-        //NOTE:  Checks first item in the navigation drawer initially
-        navigationView.setCheckedItem(R.id.nav_chat);
         //NOTE:  Open fragment1 initially.
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.mainFrame, new ChatFragment());
@@ -125,12 +170,13 @@ public class NavigationActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        navigationView.setCheckedItem(id);
         Fragment fragment = null;
         if (id == R.id.nav_chat) {
             fragment = new ChatFragment();
         } else if (id == R.id.nav_timeline) {
             fragment = new TimelineFragment();
-        } else if (id == R.id.nav_calendar) {
+        } else if (id == R.id.nav_new_date) {
             fragment = new CalendarFragment();
         }
         //NOTE: Fragment changing code
@@ -150,6 +196,17 @@ public class NavigationActivity extends AppCompatActivity
         //NOTE:  Code to replace the toolbar title based current visible fragment
         getSupportActionBar().setTitle(title);
     }
+
+    @Override
+    public void onNewDateAdded(MomentDate momentDate) {
+       navigationView.getMenu().add(R.id.calendar_group,momentDate.getId(),0,momentDate.title);
+       Fragment fragment=new ChatFragment();
+
+       FragmentTransaction ft=getSupportFragmentManager().beginTransaction();
+       ft.replace(R.id.mainFrame,fragment);
+       ft.commit();
+    }
+
 
 
 }

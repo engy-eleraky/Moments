@@ -113,7 +113,7 @@ public class RegisterActivity extends AppCompatActivity {
                                             Intent registerIntent = new Intent(RegisterActivity.this,CheckCodeActivity .class);
                                             registerIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                             startActivity(registerIntent);
-                                            //finish();
+                                            finish();
 
                                         }
                                         else {

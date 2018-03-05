@@ -27,6 +27,11 @@
     <string name="hello_chat_fragment">Hello chat fragment</string>
     <string name="hello_timeline_fragment">Hello timeline fragment</string>
     <string name="hello_calendar_fragment">Hello calendar fragment</string>
+    <string-array name="reminder_spinner_list">
+        <item>a day before</item>
+        <item>two days before</item>
+        <item>a week before</item>
 
+    </string-array>
 
 </resources>

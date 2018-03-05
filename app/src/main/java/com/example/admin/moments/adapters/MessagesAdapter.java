@@ -1,4 +1,4 @@
-package com.example.admin.moments.navigation;
+package com.example.admin.moments.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.admin.moments.R;
@@ -83,7 +85,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             mReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                     final String image=dataSnapshot.child("image").getValue().toString();
+                    final String image=dataSnapshot.child("image").getValue().toString();
                     Picasso.with(context).load(image).networkPolicy(NetworkPolicy.OFFLINE)
                             .placeholder(R.drawable.icon).into(vh1.mImage, new Callback() {
                         @Override
@@ -108,7 +110,24 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             });
 
         }
-        vh1.mTextMessage.setText("      "+message.getMessages());
+        String type=message.getType();
+        if(type.equals("text")){
+            vh1.mTextMessage.setText(message.getMessages());
+            vh1.mImageMessage.setVisibility(View.INVISIBLE);
+
+        }else{
+            vh1.mTextMessage.setVisibility(View.INVISIBLE);
+            Picasso.with(context).load(message.getMessages()).placeholder(R.drawable.icon).into(vh1.mImageMessage);
+
+        }
+        vh1.mTextTime.setText(message.getTime());
+
+//        //not yet
+//        if(!message.isSeen())
+//
+//        {
+//            vh1.mOnline.setVisibility(View.INVISIBLE);
+//        }
 
     }
     private void configurePartnerHolder(final PartnerViewHolder vh2, int position) {
@@ -147,7 +166,17 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             });
 
         }
-        vh2.mTextMessage1.setText(message.getMessages()+"      ");
+        String type=message.getType();
+        if(type.equals("text")){
+            vh2.mTextMessage1.setText(message.getMessages());
+            vh2.mImageMessage1.setVisibility(View.INVISIBLE);
+
+        }else{
+            vh2.mTextMessage1.setVisibility(View.INVISIBLE);
+            Picasso.with(context).load(message.getMessages()).placeholder(R.drawable.icon).into(vh2.mImageMessage1);
+
+        }
+        vh2.mTextTime1.setText(message.getTime());
 
     }
 
@@ -175,21 +204,36 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public class UserViewHolder extends RecyclerView.ViewHolder {
         private TextView mTextMessage;
+        private TextView mTextTime;
         private CircleImageView mImage;
+        private ImageButton mOnline;
+        private ImageView mImageMessage;
         public UserViewHolder(View itemView) {
             super(itemView);
             mTextMessage=itemView.findViewById(R.id.textmessage);
+            mTextTime=itemView.findViewById(R.id.time);
             mImage=itemView.findViewById(R.id.circleImageMessage);
+          //  mOnline=itemView.findViewById(R.id.online);
+            mImageMessage=itemView.findViewById(R.id.messageImage);
+
         }
     }
 
-        public class PartnerViewHolder extends RecyclerView.ViewHolder {
+    public class PartnerViewHolder extends RecyclerView.ViewHolder {
         private TextView mTextMessage1;
+        private TextView mTextTime1;
         private CircleImageView mImage1;
+        private ImageButton mOnline1;
+        private ImageView mImageMessage1;
+
         public PartnerViewHolder(View itemView) {
             super(itemView);
             mTextMessage1=itemView.findViewById(R.id.textmessage1);
+            mTextTime1=itemView.findViewById(R.id.time1);
             mImage1=itemView.findViewById(R.id.circleImageMessage1);
+           // mOnline1=itemView.findViewById(R.id.online1);
+            mImageMessage1=itemView.findViewById(R.id.messageImage1);
+
         }
     }
 }
