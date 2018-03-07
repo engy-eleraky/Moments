@@ -78,10 +78,13 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         mAuth=FirebaseAuth.getInstance();
         String current_user=mAuth.getCurrentUser().getUid();
-        Messages message=messagesList.get(position);
+        final Messages message=messagesList.get(position);
         String from=message.getFrom();
         if(from.equals(current_user)) {
+
             mReference= FirebaseDatabase.getInstance().getReference().child("Users").child(current_user);
+            //offline
+            mReference.keepSynced(true);
             mReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -117,27 +120,36 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         }else{
             vh1.mTextMessage.setVisibility(View.INVISIBLE);
-            Picasso.with(context).load(message.getMessages()).placeholder(R.drawable.icon).into(vh1.mImageMessage);
+            Picasso.with(context).load(message.getMessages()).networkPolicy(NetworkPolicy.OFFLINE)
+                    .placeholder(R.drawable.icon).into(vh1.mImageMessage, new Callback() {
+                @Override
+                public void onSuccess() {
+
+                }
+
+                @Override
+                public void onError() {
+
+                    Picasso.with(context).load(message.getMessages()).placeholder(R.drawable.icon).into(vh1.mImageMessage);
+                }
+            });
 
         }
         vh1.mTextTime.setText(message.getTime());
 
-//        //not yet
-//        if(!message.isSeen())
-//
-//        {
-//            vh1.mOnline.setVisibility(View.INVISIBLE);
-//        }
 
     }
     private void configurePartnerHolder(final PartnerViewHolder vh2, int position) {
 
         mAuth=FirebaseAuth.getInstance();
         String current_user=mAuth.getCurrentUser().getUid();
-        Messages message=messagesList.get(position);
+        final Messages message=messagesList.get(position);
         String from=message.getFrom();
         if(!from.equals(current_user)) {
+
             mReference= FirebaseDatabase.getInstance().getReference().child("Users").child(from);
+            //offline
+            mReference.keepSynced(true);
             mReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -173,7 +185,20 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         }else{
             vh2.mTextMessage1.setVisibility(View.INVISIBLE);
-            Picasso.with(context).load(message.getMessages()).placeholder(R.drawable.icon).into(vh2.mImageMessage1);
+            Picasso.with(context).load(message.getMessages()).networkPolicy(NetworkPolicy.OFFLINE)
+                    .placeholder(R.drawable.icon).into(vh2.mImageMessage1, new Callback() {
+                @Override
+                public void onSuccess() {
+
+                }
+
+                @Override
+                public void onError() {
+
+
+                    Picasso.with(context).load(message.getMessages()).placeholder(R.drawable.icon).into(vh2.mImageMessage1);
+                }
+            });
 
         }
         vh2.mTextTime1.setText(message.getTime());
@@ -192,14 +217,14 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     @Override
-    public int getItemViewType(int position)
-    {
-        mAuth=FirebaseAuth.getInstance();
-        String current_user=mAuth.getCurrentUser().getUid();
-        if(messagesList.get(position).getFrom().equals(current_user) )
-        { return 1;}
+    public int getItemViewType(int position) {
+        mAuth = FirebaseAuth.getInstance();
+        String current_user = mAuth.getCurrentUser().getUid();
 
-        else return 2;
+            if (messagesList.get(position).getFrom().equals(current_user)) {
+                return 1;
+            } else return 2;
+
     }
 
     public class UserViewHolder extends RecyclerView.ViewHolder {
@@ -213,7 +238,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             mTextMessage=itemView.findViewById(R.id.textmessage);
             mTextTime=itemView.findViewById(R.id.time);
             mImage=itemView.findViewById(R.id.circleImageMessage);
-          //  mOnline=itemView.findViewById(R.id.online);
+           // mOnline=itemView.findViewById(R.id.online);
             mImageMessage=itemView.findViewById(R.id.messageImage);
 
         }

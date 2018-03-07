@@ -1,65 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="10dp">
-<de.hdodenhof.circleimageview.CircleImageView
-    android:layout_width="56dp"
-    android:layout_height="56dp"
-    android:src="@drawable/icon"
-    android:id="@+id/circleImageMessage" />
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="100dp"
-   android:orientation="vertical"
-    android:layout_alignBottom="@+id/circleImageMessage"
-    android:layout_marginStart="80dp"
-    android:background="@drawable/messgae_text"
-    android:id="@+id/linearLayout2">
-
-    <TextView
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:src="@drawable/icon"
+        android:id="@+id/circleImageMessage" />
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-         android:textSize="20sp"
-        android:text="TextView"
-        android:id="@+id/textmessage"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="2dp"
-        android:layout_marginTop="2dp"/>
+        android:orientation="vertical"
+        android:layout_marginStart="80dp"
+        android:background="@drawable/messgae_text"
+        android:id="@+id/linearLayout2">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="TextView"
+            android:id="@+id/textmessage"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:id="@+id/messageImage"
+            android:layout_margin="5dp"
+            />
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:text="11:45"
+            android:textSize="16sp" />
 
 
-   <TextView
-        android:id="@+id/time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="10dp"
-       android:layout_marginRight="5dp"
-        android:text="11:45"
-        android:textSize="16sp" />
-
-
-</LinearLayout>
-    <ImageView
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:scaleType="centerCrop"
-        android:id="@+id/messageImage"
-        android:layout_marginStart="70dp"
-        android:layout_alignBottom="@+id/linearLayout2"/>
-
- <!--   <ImageButton
-        android:id="@+id/online"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:layout_alignBottom="@+id/linearLayout2"
-        android:layout_marginStart="14dp"
-        android:layout_toEndOf="@+id/linearLayout2"
-        android:visibility="visible"
-        app:srcCompat="@mipmap/ic1_launcher" />
--->
-
+    </LinearLayout>
 
 </RelativeLayout>

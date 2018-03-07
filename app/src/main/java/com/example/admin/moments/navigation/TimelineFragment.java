@@ -2,11 +2,13 @@ package com.example.admin.moments.navigation;
 
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -24,8 +26,10 @@ import com.example.admin.moments.R;
 import com.example.admin.moments.Utils;
 import com.example.admin.moments.adapters.TimelineAdapter;
 import com.example.admin.moments.models.Timeline;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -42,6 +46,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -62,10 +67,12 @@ public class TimelineFragment extends Fragment {
     FirebaseStorage storage;
     StorageReference storageRef;
     DatabaseReference mRef;
-
+    String prefs="";
     private String imageSelectedUri;
-    private int GALLERY_IMAGE_PICK = 1;
-
+    private int GALLERY_PICK = 1;
+    private ProgressDialog mDialogue;
+    String code="";
+    String downloadUrl="";
 
     public TimelineFragment() {
         // Required empty public constructor
@@ -90,17 +97,24 @@ public class TimelineFragment extends Fragment {
         postEditText = view.findViewById(R.id.timelinePostEditText);
         addImageButton = view.findViewById(R.id.addImageTimelineButton);
         postButton = view.findViewById(R.id.postButton);
+        mDialogue=new ProgressDialog(getActivity());
 
         recyclerView = view.findViewById(R.id.timelineRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         getTimelinePosts();
 
-        /*addImageButton.setOnClickListener(new View.OnClickListener() {
+        //generate code
+        Random random = new Random();
+        for (int i = 0 ; i < 6 ; i++) {
+            code += String.valueOf(random.nextInt(10));
+        }
+
+        addImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 browseImage();
             }
-        });*/
+        });
 
         postButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,36 +133,13 @@ public class TimelineFragment extends Fragment {
                     final Timeline newPost = new Timeline(post, mCurrentUser.getUid(), dateAsText);
                     addNewPostToDatabase(newPost);
                     adapter.addNewPost(newPost);
-                   /* if (imageSelectedUri != null) {
-                        Uri image = Uri.parse(imageSelectedUri);
-                        final StorageReference timelineRef = storageRef.child("timeline/" + image.getLastPathSegment());
-
-                        UploadTask uploadTask = timelineRef.putFile(image);
-                        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                timelineRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
-                                    public void onSuccess(Uri uri) {
-                                        newPost.setImage(uri.toString());
-                                        addNewPostToDatabase(newPost);
-                                        adapter.addNewPost(newPost);
-                                    }
-                                });
-                            }
-                        });
-
-                        uploadTask.addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getActivity(), "Failed to upload your new post" , Toast.LENGTH_LONG).show();
-                                Log.d(getTag(), e.getMessage());
-                            }
-                        });
-                    } else {
+                    if(downloadUrl!=null){
+                        newPost.setImage(downloadUrl);
                         addNewPostToDatabase(newPost);
                         adapter.addNewPost(newPost);
-                    }*/
+                    }
+
+
                 }
                 postEditText.setText("");
             }
@@ -156,9 +147,10 @@ public class TimelineFragment extends Fragment {
 
         return view;
     }
-
+    //add post
     private void addNewPostToDatabase(final Timeline newPost) {
-        mRef.child(Utils.CHILD_COUPLES).child(Utils.CHILD_TIMELINE).addListenerForSingleValueEvent(new ValueEventListener() {
+        prefs= PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
+        mRef.child(Utils.CHILD_COUPLES).child(prefs).child(Utils.CHILD_TIMELINE).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 long noOfChildren = dataSnapshot.getChildrenCount();
@@ -170,7 +162,7 @@ public class TimelineFragment extends Fragment {
                     map.put(Utils.MOMENT_IMAGE, newPost.getImage());
                 }
 
-                mRef.child(Utils.CHILD_COUPLES).child(Utils.CHILD_TIMELINE).child(String.valueOf(noOfChildren+1)).setValue(map);
+                mRef.child(Utils.CHILD_COUPLES).child(prefs).child(Utils.CHILD_TIMELINE).child(String.valueOf(noOfChildren+1)).setValue(map);
             }
 
             @Override
@@ -179,9 +171,10 @@ public class TimelineFragment extends Fragment {
             }
         });
     }
-
+    //show
     private void getTimelinePosts() {
-        mRef.child(Utils.CHILD_COUPLES).child(Utils.CHILD_TIMELINE).addListenerForSingleValueEvent(new ValueEventListener() {
+        prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
+        mRef.child(Utils.CHILD_COUPLES).child(prefs).child(Utils.CHILD_TIMELINE).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
@@ -206,40 +199,35 @@ public class TimelineFragment extends Fragment {
 
     private void browseImage() {
 
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-        startActivityForResult(galleryIntent, GALLERY_IMAGE_PICK);
+        Intent galleryIntent=new Intent();
+        galleryIntent.setType("image/*");
+        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(galleryIntent,"SELECT IMAGE"),GALLERY_PICK);
 
     }
 
-    /*@Override
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == GALLERY_IMAGE_PICK && resultCode == RESULT_OK
-                && data != null)
-        {
-            Uri selectedImage = data.getData();
-            imageSelectedUri = getRealPathFromURI(selectedImage, getActivity());
-        }
-    }*/
+        if (requestCode == GALLERY_PICK && resultCode == RESULT_OK) {
+            mDialogue.setTitle("uplaoding photo....");
+            mDialogue.setMessage("please wait");
+            mDialogue.show();
+            prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
 
-    public String getRealPathFromURI(Uri contentURI, Activity context) {
-        String[] projection = { MediaStore.Images.Media.DATA };
-        @SuppressWarnings("deprecation")
-        Cursor cursor = context.managedQuery(contentURI, projection, null,
-                null, null);
-        if (cursor == null)
-            return null;
-        int column_index = cursor
-                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        if (cursor.moveToFirst()) {
-            String s = cursor.getString(column_index);
-            // cursor.close();
-            return s;
+            Uri resultUri = data.getData();
+            StorageReference filePath=storageRef.child("Timeline").child(prefs).child(code+".jpg");
+            filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    if(task.isSuccessful()){
+                        mDialogue.hide();
+                        downloadUrl=task.getResult().getDownloadUrl().toString();
+
+                    }
+                }
+            });
         }
-        // cursor.close();
-        return null;
     }
 
     @Override

@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="wrap_content"
     android:padding="10dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -15,9 +15,8 @@
         android:src="@drawable/icon" />
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_centerVertical="true"
         android:layout_marginEnd="20dp"
         android:layout_toStartOf="@+id/circleImageMessage1"
         android:background="@drawable/text_view_shape"
@@ -33,7 +32,12 @@
             android:layout_marginStart="10dp"
             android:layout_marginBottom="2dp"
             android:layout_marginTop="2dp"/>
-
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:id="@+id/messageImage1"
+            android:layout_margin="5dp"/>
 
         <TextView
             android:id="@+id/time1"
@@ -46,21 +50,5 @@
             android:textSize="16sp" />
 
     </LinearLayout>
-    <ImageView
-        android:layout_width="280dp"
-        android:layout_height="300dp"
-        android:scaleType="centerCrop"
-        android:id="@+id/messageImage1"
-        android:layout_alignBottom="@+id/linearLayout"/>
-   <!-- <ImageButton
-        android:id="@+id/online1"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:layout_alignBottom="@+id/messageImage1"
-        android:layout_marginEnd="12dp"
-        android:layout_toStartOf="@+id/linearLayout"
-        android:visibility="visible"
-        app:srcCompat="@mipmap/ic1_launcher" />
--->
 
 </RelativeLayout>

@@ -25,7 +25,7 @@ public class OfflineCapabilities extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-    FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
          /*picasso*/
         Picasso.Builder builder=new Picasso.Builder(this);
         builder.downloader(new OkHttpDownloader(this,Integer.MAX_VALUE));
@@ -37,7 +37,7 @@ public class OfflineCapabilities extends Application {
         mAuth=FirebaseAuth.getInstance();
         mUser=mAuth.getCurrentUser();
         if(mUser!=null){
-         mReference=FirebaseDatabase.getInstance().getReference().child("Users").child(mUser.getUid());
+            mReference=FirebaseDatabase.getInstance().getReference().child("Users").child(mUser.getUid());
 
 
         }

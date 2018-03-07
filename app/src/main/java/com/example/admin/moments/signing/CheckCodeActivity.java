@@ -258,12 +258,6 @@ public class CheckCodeActivity extends AppCompatActivity {
             }
         });
 
-        //save
-        /*SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(CheckCodeActivity.this);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(CODE_KEY, code);
-        editor.apply();
-*/
         //create child
 
         mReference.child(Utils.CHILD_ONWAIT).child(mCurrentUser.getUid()).child("code").setValue(code).addOnCompleteListener(new OnCompleteListener<Void>() {

@@ -33,6 +33,7 @@ public class Utils {
 
     // shared preference keys
     public static final String COUPLE_KEYCODE = "couple_keycode";
+    public static final String MESSAGE_LIST = "message_list";
 
 }
 

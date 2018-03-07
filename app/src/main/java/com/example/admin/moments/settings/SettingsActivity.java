@@ -53,6 +53,7 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
         circleImageView=findViewById(R.id.circleImageView);
         mName=findViewById(R.id.textViewName);
         mStatus=findViewById(R.id.textViewHi);
@@ -140,7 +141,6 @@ public class SettingsActivity extends AppCompatActivity {
                 mDialogue.show();
                            //upload photo
                 Uri resultUri = result.getUri();
-                //StorageReference filePath=mStorageRef.child("profile").child(random()+".jpg");
                 StorageReference filePath=mStorageRef.child("profiles").child(mUid+".jpg");
                 filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
