@@ -30,7 +30,6 @@ public class Utils {
     public static final String MOMENT_DATE = "date";
     public static final String MOMENT_IMAGE = "image";
 
-
     // shared preference keys
     public static final String COUPLE_KEYCODE = "couple_keycode";
     public static final String MESSAGE_LIST = "message_list";

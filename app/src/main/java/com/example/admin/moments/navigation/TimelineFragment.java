@@ -158,6 +158,8 @@ public class TimelineFragment extends Fragment {
                 map.put(Utils.MOMENT_POST, newPost.post);
                 map.put(Utils.MOMENT_DATE, newPost.date);
                 map.put(Utils.MOMENT_FROM, newPost.from);
+                ////////////////////////////
+                //fix that
                 if (newPost.getImage() != null) {
                     map.put(Utils.MOMENT_IMAGE, newPost.getImage());
                 }

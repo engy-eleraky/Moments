@@ -83,7 +83,7 @@ public class ChatFragment extends Fragment {
     private  int itemPos=0;
     private String mLastKey="";
     private String mPrevKey="";
-    String messageNumber;
+    String messageNumber="";
     private static final int GALLERY_PICK=1;
     private StorageReference mStorageRef;
     private ProgressDialog mDialogue;
