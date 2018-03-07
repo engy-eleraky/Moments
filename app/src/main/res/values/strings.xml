@@ -34,4 +34,48 @@
 
     </string-array>
 
+
+    <string name="code">953095</string>
+    <string name="share">share code with partner</string>
+    <string name="send">Send the code to your partner to connect</string>
+    <string name="enter">Enter your partner code</string>
+    <string name="done">done coupling user with his partner</string>
+    <string name="done_adding_calendar">Done</string>
+    <string name="login">Log In</string>
+    <string name="save_status">save status</string>
+    <string name="sign_up">Sign up</string>
+    <string name="display_name">Display name</string>
+    <string name="hi">Hi..............</string>
+    <string name="change_image">Change Image</string>
+    <string name="change_status">Change Status</string>
+    <string name="create">Create</string>
+    <string name="cancel">Cancel</string>
+    <string name="title_of_calendar">title</string>
+    <string name="time_of_calendar">time</string>
+    <string name="reminder">Reminde me</string>
+    <string name="add_image">add image</string>
+    <string name="send_message">send message</string>
+    <string name="post">post</string>
+    <string name="message_text">TextView</string>
+    <string name="message_time">4/3/2018 11:45:5 AM</string>
+    <string name="post_time">4/3/2018</string>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </resources>

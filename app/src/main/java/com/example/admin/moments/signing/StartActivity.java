@@ -100,7 +100,7 @@ public class StartActivity extends AppCompatActivity {
         mButtonGoogleLog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDialogue.setMessage("please wait...");
+                mDialogue.setMessage(Utils.WAIT);
                 mDialogue.show();
                 signIn();
             }
@@ -166,15 +166,14 @@ public class StartActivity extends AppCompatActivity {
                             String uid=user.getUid();
                             String name=user.getDisplayName();
                             String email=user.getEmail();
-                            DatabaseReference mReference= FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+                            DatabaseReference mReference= FirebaseDatabase.getInstance().getReference().child(Utils.CHILD_USERS).child(uid);
                             HashMap<String,String> map=new HashMap<>();
-                            map.put("name",name);
-                            map.put("status","Hi .....");
-                            map.put("image","default");
-                            map.put("thumbnail","default");
-                            map.put("email",email);
-                            map.put("id",uid);
-                            // map.put("online","true");
+                            map.put(Utils.NAME,name);
+                            map.put(Utils.STATUS,"Hi .....");
+                            map.put(Utils.IMAGE,"default");
+                            map.put(Utils.THUMBNAIL,"default");
+                            map.put(Utils.EMAIL,email);
+                            map.put(Utils.ID,uid);
                             mReference.setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
@@ -193,7 +192,7 @@ public class StartActivity extends AppCompatActivity {
                                             finish();
                                         }
                                     }else{
-                                        Toast.makeText(StartActivity.this, "fail to launch", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(StartActivity.this, Utils.FAIL_LAUNCH, Toast.LENGTH_LONG).show();
 
                                     }
 

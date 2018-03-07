@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.admin.moments.R;
+import com.example.admin.moments.Utils;
 import com.example.admin.moments.models.Messages;
 import com.example.admin.moments.settings.SettingsActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -82,13 +83,13 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         String from=message.getFrom();
         if(from.equals(current_user)) {
 
-            mReference= FirebaseDatabase.getInstance().getReference().child("Users").child(current_user);
+            mReference= FirebaseDatabase.getInstance().getReference().child(Utils.CHILD_USERS).child(current_user);
             //offline
             mReference.keepSynced(true);
             mReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    final String image=dataSnapshot.child("image").getValue().toString();
+                    final String image=dataSnapshot.child(Utils.IMAGE).getValue().toString();
                     Picasso.with(context).load(image).networkPolicy(NetworkPolicy.OFFLINE)
                             .placeholder(R.drawable.icon).into(vh1.mImage, new Callback() {
                         @Override
@@ -147,13 +148,13 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         String from=message.getFrom();
         if(!from.equals(current_user)) {
 
-            mReference= FirebaseDatabase.getInstance().getReference().child("Users").child(from);
+            mReference= FirebaseDatabase.getInstance().getReference().child(Utils.CHILD_USERS).child(from);
             //offline
             mReference.keepSynced(true);
             mReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    final String image=dataSnapshot.child("image").getValue().toString();
+                    final String image=dataSnapshot.child(Utils.IMAGE).getValue().toString();
                     Picasso.with(context).load(image).networkPolicy(NetworkPolicy.OFFLINE)
                             .placeholder(R.drawable.icon).into(vh2.mImage1, new Callback() {
                         @Override
@@ -231,14 +232,12 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private TextView mTextMessage;
         private TextView mTextTime;
         private CircleImageView mImage;
-        private ImageButton mOnline;
         private ImageView mImageMessage;
         public UserViewHolder(View itemView) {
             super(itemView);
             mTextMessage=itemView.findViewById(R.id.textmessage);
             mTextTime=itemView.findViewById(R.id.time);
             mImage=itemView.findViewById(R.id.circleImageMessage);
-           // mOnline=itemView.findViewById(R.id.online);
             mImageMessage=itemView.findViewById(R.id.messageImage);
 
         }
@@ -248,7 +247,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private TextView mTextMessage1;
         private TextView mTextTime1;
         private CircleImageView mImage1;
-        private ImageButton mOnline1;
         private ImageView mImageMessage1;
 
         public PartnerViewHolder(View itemView) {
@@ -256,7 +254,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             mTextMessage1=itemView.findViewById(R.id.textmessage1);
             mTextTime1=itemView.findViewById(R.id.time1);
             mImage1=itemView.findViewById(R.id.circleImageMessage1);
-           // mOnline1=itemView.findViewById(R.id.online1);
             mImageMessage1=itemView.findViewById(R.id.messageImage1);
 
         }

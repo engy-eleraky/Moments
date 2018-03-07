@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.admin.moments.R;
+import com.example.admin.moments.Utils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,15 +33,15 @@ public class StatusActivity extends AppCompatActivity {
         setContentView(R.layout.activity_status);
         mToolBarStatus= findViewById(R.id.status_toolBar);
         setSupportActionBar(mToolBarStatus);
-        getSupportActionBar().setTitle("Status");
+        getSupportActionBar().setTitle(Utils.STATUS);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mUser= FirebaseAuth.getInstance().getCurrentUser();
         String mUid=mUser.getUid();
-        mReference= FirebaseDatabase.getInstance().getReference().child("Users").child(mUid);
+        mReference= FirebaseDatabase.getInstance().getReference().child(Utils.CHILD_USERS).child(mUid);
 
          //get status from settings
-        String statusValue=getIntent().getStringExtra("satus_value");
+        String statusValue=getIntent().getStringExtra(SettingsActivity.STATUS);
         mStatus=findViewById(R.id.textInputLayoutStatus);
         mStatus.getEditText().setText(statusValue);
 
@@ -50,12 +51,12 @@ public class StatusActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mDialogue=new ProgressDialog(StatusActivity.this);
-                mDialogue.setTitle("saving changes");
-                mDialogue.setMessage("please wait");
+                mDialogue.setTitle(Utils.SAVE_CHANGES);
+                mDialogue.setMessage(Utils.WAIT);
                 mDialogue.show();
 
                 String status=mStatus.getEditText().getText().toString();
-                mReference.child("status").setValue(status).addOnCompleteListener(new OnCompleteListener<Void>() {
+                mReference.child(Utils.STATUS).setValue(status).addOnCompleteListener(new OnCompleteListener<Void>() {
                  @Override
                  public void onComplete(@NonNull Task<Void> task) {
                      if (task.isSuccessful()) {

@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         mToolBarLog= findViewById(R.id.login_toolBar);
         setSupportActionBar(mToolBarLog);
-        getSupportActionBar().setTitle("LogIn");
+        getSupportActionBar().setTitle(Utils.LOGIN);
 
         mDialogue = new ProgressDialog(this);
         mAuth = FirebaseAuth.getInstance();
@@ -51,15 +51,15 @@ public class LoginActivity extends AppCompatActivity {
                 String mDisplayPassward = mPassward.getEditableText().toString();
 
             if( !TextUtils.isEmpty(mDisplayEmail) && !TextUtils.isEmpty(mDisplayPassward)){
-                mDialogue.setTitle("Logging user");
-                mDialogue.setMessage("please wait");
+                mDialogue.setTitle(Utils.LOGGING_MESSAGE);
+                mDialogue.setMessage(Utils.WAIT);
                 mDialogue.setCanceledOnTouchOutside(false);
                 mDialogue.show();
                 login(mDisplayEmail,mDisplayPassward);
 
             }
             else{
-                Toast.makeText(LoginActivity.this, "please enter your email/passward",
+                Toast.makeText(LoginActivity.this, Utils.ENTER,
                         Toast.LENGTH_SHORT).show();
             }
 
@@ -77,7 +77,6 @@ public class LoginActivity extends AppCompatActivity {
                                 mDialogue.dismiss();
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d(TAG, "signInWithEmail:success");
-                               // FirebaseUser user = mAuth.getCurrentUser();
                                 if (PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).contains(Utils.COUPLE_KEYCODE)) {
                                     Intent logIntent=new Intent(LoginActivity.this,NavigationActivity.class);
                                     logIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -94,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
                                 mDialogue.hide();
                                 // If sign in fails, display a message to the user.
                                 Log.w(TAG, "signInWithEmail:failure", task.getException());
-                                Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                Toast.makeText(LoginActivity.this, Utils.FAIL_AUTHENTICATION,
                                         Toast.LENGTH_SHORT).show();
                             }
 

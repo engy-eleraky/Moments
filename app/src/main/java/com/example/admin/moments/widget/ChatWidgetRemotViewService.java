@@ -137,10 +137,10 @@ public class ChatWidgetRemotViewService  extends RemoteViewsService {
             if(mCountDownLatch.getCount()==0) {
                 if (mAuth.getCurrentUser() != null) {
 
-                    mReference = FirebaseDatabase.getInstance().getReference().child("Couples");
+                    mReference = FirebaseDatabase.getInstance().getReference().child(Utils.CHILD_COUPLES);
                     String prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(Utils.COUPLE_KEYCODE, "");
 
-                    mRefMessages = mReference.child(prefs).child("chat").child("messages");
+                    mRefMessages = mReference.child(prefs).child(Utils.CHILD_CHAT).child(Utils.CHILD_MESSAGES);
                     mRefMessages.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {

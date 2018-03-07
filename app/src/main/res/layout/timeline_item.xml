@@ -40,7 +40,7 @@
             android:id="@+id/timestampTextView"
             android:textColor="@color/textPrimaryColor"
             android:paddingLeft="@dimen/activity_vertical_margin"
-            android:text="16/10/2017"/>
+            android:text="@string/post_time"/>
     </RelativeLayout>
 
 </android.support.v7.widget.CardView>

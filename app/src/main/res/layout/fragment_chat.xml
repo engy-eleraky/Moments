@@ -31,6 +31,7 @@
             android:id="@+id/PickerButton"
             android:layout_width="36dp"
             android:layout_height="match_parent"
+            android:contentDescription="@string/add_image"
             android:background="@drawable/ic_add_circle_outline_black_24dp" />
 
         <EditText
@@ -48,7 +49,8 @@
             android:layout_gravity="bottom"
             android:background="@drawable/ic_send_black_24dp"
             android:enabled="false"
-            android:text="" />
+            android:contentDescription="@string/send_message"
+             />
 
 
 

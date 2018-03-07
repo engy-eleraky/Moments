@@ -110,7 +110,7 @@ public class ChatFragment extends Fragment {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_chat, container, false);
         if (mListener != null) {
-            mListener.onFragmentInteraction("Chat");
+            mListener.onFragmentInteraction(Utils.CHILD_CHAT);
         }
         mAuth = FirebaseAuth.getInstance();
         mStorageRef = FirebaseStorage.getInstance().getReference();
@@ -176,10 +176,10 @@ public class ChatFragment extends Fragment {
     private void loadMoreMessages() {
 
         if(mAuth.getCurrentUser()!=null ){
-            mReference= FirebaseDatabase.getInstance().getReference().child("Couples");
+            mReference= FirebaseDatabase.getInstance().getReference().child(Utils.CHILD_COUPLES);
             mUser=mAuth.getCurrentUser().getUid();
             String prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
-            final DatabaseReference mRefMessages=mReference.child(prefs).child("chat").child("messages");
+            final DatabaseReference mRefMessages=mReference.child(prefs).child(Utils.CHILD_CHAT).child(Utils.CHILD_MESSAGES);
             final Query messageQuery=mRefMessages.orderByKey().endAt(mLastKey).limitToLast(10);
 
             messageQuery.addChildEventListener(new ChildEventListener() {
@@ -231,11 +231,11 @@ public class ChatFragment extends Fragment {
     private void loadMessages() {
         if(mAuth.getCurrentUser()!=null ){
 
-            mReference= FirebaseDatabase.getInstance().getReference().child("Couples");
+            mReference= FirebaseDatabase.getInstance().getReference().child(Utils.CHILD_COUPLES);
             mUser=mAuth.getCurrentUser().getUid();
             String prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
 
-            mRefMessages=mReference.child(prefs).child("chat").child("messages");
+            mRefMessages=mReference.child(prefs).child(Utils.CHILD_CHAT).child(Utils.CHILD_MESSAGES);
             final Query messageQuery=mRefMessages.limitToLast(mCurrentPage*itemsToLoad);
 
             messageQuery.addChildEventListener(new ChildEventListener() {
@@ -287,11 +287,13 @@ public class ChatFragment extends Fragment {
         final String message=mText.getText().toString();
         if(!TextUtils.isEmpty(message)){
             if(mAuth.getCurrentUser()!=null ) {
-                mReference = FirebaseDatabase.getInstance().getReference().child("Couples");
+                mReference = FirebaseDatabase.getInstance().getReference().child(Utils.CHILD_COUPLES);
                 String prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
-                mRefSendMessage=mReference.child(prefs).child("chat").child("messages");
+                mRefSendMessage=mReference.child(prefs).child(Utils.CHILD_CHAT).child(Utils.CHILD_MESSAGES);
                 mRefSendMessage.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
+                    ////////////////
+                    //enhance code
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         long messageNum= 1;
                         messageNum +=dataSnapshot.getChildrenCount();
@@ -337,19 +339,19 @@ public class ChatFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == GALLERY_PICK && resultCode == RESULT_OK) {
-            mDialogue.setTitle("uplaoding photo....");
-            mDialogue.setMessage("please wait");
+            mDialogue.setTitle(Utils.UPLOAD_PHOTO);
+            mDialogue.setMessage(Utils.WAIT);
            // mDialogue.setCanceledOnTouchOutside(false);
             mDialogue.show();
 
             Uri resultUri = data.getData();
             if(mAuth.getCurrentUser()!=null){
-                mReference = FirebaseDatabase.getInstance().getReference().child("Couples");
+                mReference = FirebaseDatabase.getInstance().getReference().child(Utils.CHILD_COUPLES);
                 prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
-                mRefSendMessage=mReference.child(prefs).child("chat").child("messages");
-                mRef=mReference.child(prefs).child("chat").child("media");
+                mRefSendMessage=mReference.child(prefs).child(Utils.CHILD_CHAT).child(Utils.CHILD_MESSAGES);
+                mRef=mReference.child(prefs).child(Utils.CHILD_CHAT).child(Utils.CHILD_MEDIA);
 
-                StorageReference filePath=mStorageRef.child("Media").child(prefs).child(code+".jpg");
+                StorageReference filePath=mStorageRef.child(Utils.CHILD_MEDIA_STORAGE).child(prefs).child(code+".jpg");
                 filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {

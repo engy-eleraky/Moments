@@ -85,7 +85,7 @@ public class TimelineFragment extends Fragment {
         // Inflate the layout for this fragment
         View view=inflater.inflate(R.layout.fragment_timeline, container, false);
         if (mListener != null) {
-            mListener.onFragmentInteraction("Timeline");
+            mListener.onFragmentInteraction(Utils.CHILD_TIMELINE);
         }
 
         mAuth = FirebaseAuth.getInstance();
@@ -148,6 +148,7 @@ public class TimelineFragment extends Fragment {
         return view;
     }
     //add post
+    //enhanced code
     private void addNewPostToDatabase(final Timeline newPost) {
         prefs= PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
         mRef.child(Utils.CHILD_COUPLES).child(prefs).child(Utils.CHILD_TIMELINE).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -212,13 +213,13 @@ public class TimelineFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GALLERY_PICK && resultCode == RESULT_OK) {
-            mDialogue.setTitle("uplaoding photo....");
-            mDialogue.setMessage("please wait");
+            mDialogue.setTitle(Utils.UPLOAD_PHOTO);
+            mDialogue.setMessage(Utils.WAIT);
             mDialogue.show();
             prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
 
             Uri resultUri = data.getData();
-            StorageReference filePath=storageRef.child("Timeline").child(prefs).child(code+".jpg");
+            StorageReference filePath=storageRef.child(Utils.CHILD_TIMELINE).child(prefs).child(code+".jpg");
             filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {

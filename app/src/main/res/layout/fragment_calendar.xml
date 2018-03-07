@@ -32,7 +32,7 @@
             android:id="@+id/titleInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Title"
+            android:hint="@string/title_of_calendar"
             android:drawableBottom="@drawable/bottom_line"
             android:inputType="text"
             android:gravity="center"/>
@@ -44,12 +44,13 @@
         android:textAppearance="@android:style/TextAppearance.Medium"
         android:id="@+id/dateButton"
         android:gravity="center"
+        android:contentDescription="@string/time_of_calendar"
         android:background="@color/transparent"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Reminde me"
+        android:text="@string/reminder"
         android:textAppearance="@android:style/TextAppearance.Holo.Medium"
         android:layout_marginTop="16dp"
         android:layout_marginLeft="16dp"

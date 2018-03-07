@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.admin.moments.R;
+import com.example.admin.moments.Utils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -47,7 +48,7 @@ public class SettingsActivity extends AppCompatActivity {
     private Button mButtonImage;
     private StorageReference mStorageRef;
     private ProgressDialog mDialogue;
-
+    public static final String STATUS="status_value";
     String mUid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +72,10 @@ public class SettingsActivity extends AppCompatActivity {
         mReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String name=dataSnapshot.child("name").getValue().toString();
-                final String image=dataSnapshot.child("image").getValue().toString();
-                String status=dataSnapshot.child("status").getValue().toString();
-                String thumb=dataSnapshot.child("thumbnail").getValue().toString();
+                String name=dataSnapshot.child(Utils.NAME).getValue().toString();
+                final String image=dataSnapshot.child(Utils.IMAGE).getValue().toString();
+                String status=dataSnapshot.child(Utils.STATUS).getValue().toString();
+                String thumb=dataSnapshot.child(Utils.THUMBNAIL).getValue().toString();
 
                 mName.setText(name);
                 mStatus.setText(status);
@@ -109,7 +110,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String statusValue=mStatus.getText().toString();
                 Intent statusIntent = new Intent(SettingsActivity.this, StatusActivity.class);
-                statusIntent.putExtra("satus_value",statusValue);
+                statusIntent.putExtra(STATUS,statusValue);
                 startActivity(statusIntent);
             }
         });
@@ -135,29 +136,29 @@ public class SettingsActivity extends AppCompatActivity {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 mDialogue=new ProgressDialog(SettingsActivity.this);
-                mDialogue.setTitle("uplaoding photo....");
-                mDialogue.setMessage("please wait");
+                mDialogue.setTitle(Utils.UPLOAD_PHOTO);
+                mDialogue.setMessage(Utils.WAIT);
                 mDialogue.setCanceledOnTouchOutside(false);
                 mDialogue.show();
                            //upload photo
                 Uri resultUri = result.getUri();
-                StorageReference filePath=mStorageRef.child("profiles").child(mUid+".jpg");
+                StorageReference filePath=mStorageRef.child(Utils.CHILD_PROFILE_STORAGE).child(mUid+".jpg");
                 filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                         if(task.isSuccessful()){
                                         //get url for image and set it in database
                             String downloadUrl=task.getResult().getDownloadUrl().toString();
-                            mReference.child("image").setValue(downloadUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            mReference.child(Utils.IMAGE).setValue(downloadUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     mDialogue.hide();
-                                    Toast.makeText(SettingsActivity.this,"working",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(SettingsActivity.this,Utils.WORK,Toast.LENGTH_LONG).show();
 
                                 }
                             });
                         }else{
-                            Toast.makeText(SettingsActivity.this," not working",Toast.LENGTH_LONG).show();
+                            Toast.makeText(SettingsActivity.this,Utils.NOT_WORK,Toast.LENGTH_LONG).show();
                             mDialogue.dismiss();
                         }
                     }

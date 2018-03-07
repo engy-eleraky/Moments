@@ -116,8 +116,8 @@ public class CheckCodeActivity extends AppCompatActivity {
             public void onClick(View view) {
                  String enteredCode = codeEditText.getEditableText().toString();
                 if( !TextUtils.isEmpty(enteredCode) ) {
-                    mDialogue.setTitle("Please wait");
-                    mDialogue.setMessage("Connecting you with your partner...");
+                    mDialogue.setTitle(Utils.WAIT);
+                    mDialogue.setMessage(Utils.CONNECT);
                     mDialogue.setCanceledOnTouchOutside(false);
                     mDialogue.show();
                     checkCode(enteredCode);
@@ -152,7 +152,7 @@ public class CheckCodeActivity extends AppCompatActivity {
                     coding = codes.next().getValue(Coding.class);
                     if (code.equals(coding.code)) {
                         mDialogue.dismiss();
-                        Toast.makeText(CheckCodeActivity.this, "Welcome to chat with your partner :)", Toast.LENGTH_LONG).show();
+                        Toast.makeText(CheckCodeActivity.this, Utils.WELCOME, Toast.LENGTH_LONG).show();
                         String id = coding.id;
 
                         // add couple
@@ -179,7 +179,6 @@ public class CheckCodeActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 long childrenCount = dataSnapshot.getChildrenCount();
                 String coupleKeycode = String.valueOf(childrenCount + 1);
-//                DatabaseReference coupleRef = childCoupleRef.child(coupleKeycode);
 
                 //save
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(CheckCodeActivity.this);
@@ -195,9 +194,9 @@ public class CheckCodeActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
                             //handle errors
-                            Toast.makeText(CheckCodeActivity.this,"id1 added",Toast.LENGTH_LONG).show();
+                            Toast.makeText(CheckCodeActivity.this,Utils.ID1_ADDED,Toast.LENGTH_LONG).show();
                         }else{
-                            Toast.makeText(CheckCodeActivity.this,"id1 failed to added",Toast.LENGTH_LONG).show();
+                            Toast.makeText(CheckCodeActivity.this,Utils.ID1_FAILED,Toast.LENGTH_LONG).show();
 
                         }
                     }
@@ -210,9 +209,9 @@ public class CheckCodeActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<Void> task) {
                                 if(task.isSuccessful()){
                                     //handle errors
-                                    Toast.makeText(CheckCodeActivity.this,"id1 added",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(CheckCodeActivity.this,Utils.ID1_ADDED,Toast.LENGTH_LONG).show();
                                 }else{
-                                    Toast.makeText(CheckCodeActivity.this,"id1 failed to added",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(CheckCodeActivity.this,Utils.ID1_FAILED,Toast.LENGTH_LONG).show();
 
                                 }
                             }
@@ -226,9 +225,9 @@ public class CheckCodeActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<Void> task) {
                                 if(task.isSuccessful()){
                                     //handle errors
-                                    Toast.makeText(CheckCodeActivity.this,"id1 added",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(CheckCodeActivity.this,Utils.ID1_ADDED,Toast.LENGTH_LONG).show();
                                 }else{
-                                    Toast.makeText(CheckCodeActivity.this,"id1 failed to added",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(CheckCodeActivity.this,Utils.ID1_FAILED,Toast.LENGTH_LONG).show();
                                 }
                             }
                         });
@@ -260,14 +259,14 @@ public class CheckCodeActivity extends AppCompatActivity {
 
         //create child
 
-        mReference.child(Utils.CHILD_ONWAIT).child(mCurrentUser.getUid()).child("code").setValue(code).addOnCompleteListener(new OnCompleteListener<Void>() {
+        mReference.child(Utils.CHILD_ONWAIT).child(mCurrentUser.getUid()).child(Utils.CODE).setValue(code).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
                     //handle errors
-                    Toast.makeText(CheckCodeActivity.this,"code added",Toast.LENGTH_LONG).show();
+                    Toast.makeText(CheckCodeActivity.this,Utils.CODE_ADDED,Toast.LENGTH_LONG).show();
                 }else{
-                    Toast.makeText(CheckCodeActivity.this,"code failed to added",Toast.LENGTH_LONG).show();
+                    Toast.makeText(CheckCodeActivity.this,Utils.CODE_FAILED,Toast.LENGTH_LONG).show();
 
                 }
             }
@@ -278,10 +277,10 @@ public class CheckCodeActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
                     //handle errors
-                    Toast.makeText(CheckCodeActivity.this,"id added",Toast.LENGTH_LONG).show();
+                    Toast.makeText(CheckCodeActivity.this,Utils.ID_ADDED,Toast.LENGTH_LONG).show();
 
                 }else{
-                    Toast.makeText(CheckCodeActivity.this,"id failed to added",Toast.LENGTH_LONG).show();
+                    Toast.makeText(CheckCodeActivity.this,Utils.ID1_FAILED,Toast.LENGTH_LONG).show();
 
                 }
             }

@@ -53,7 +53,7 @@ public class CalendarFragment extends Fragment implements DatePickerDialog.OnDat
     private String dateAsText;
 
     private DatabaseReference mRef;
-    private String COUPLE_CODE;
+    private String prefs="";
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -66,11 +66,11 @@ public class CalendarFragment extends Fragment implements DatePickerDialog.OnDat
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_calendar, container, false);
         if (mListener != null) {
-            mListener.onFragmentInteraction("Calendar");
+            mListener.onFragmentInteraction(Utils.CHILD_CALENDAR);
         }
 
         mRef = FirebaseDatabase.getInstance().getReference();
-        COUPLE_CODE = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE, "");
+        prefs = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE, "");
 
         reminderSpinner = view.findViewById(R.id.reminderSpinner);
         dateButton = view.findViewById(R.id.dateButton);
@@ -93,7 +93,7 @@ public class CalendarFragment extends Fragment implements DatePickerDialog.OnDat
         String separator = "/";
         dateAsText = String.valueOf(dayOfMonth) + separator + String.valueOf(month+1) + separator + String.valueOf(year);
         dateButton.setText(dateAsText);
-                     ////???????????????
+
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.reminder_spinner_list, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -109,11 +109,11 @@ public class CalendarFragment extends Fragment implements DatePickerDialog.OnDat
 
                 final MomentDate momentDate = new MomentDate(title, date, selectedReminderOption);
 
-                mRef.child(Utils.CHILD_COUPLES).child(COUPLE_CODE).child(Utils.CHILD_CALENDAR).addListenerForSingleValueEvent(new ValueEventListener() {
+                mRef.child(Utils.CHILD_COUPLES).child(prefs).child(Utils.CHILD_CALENDAR).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         long noOfChildren = dataSnapshot.getChildrenCount();
-                        DatabaseReference dateRef= mRef.child(Utils.CHILD_COUPLES).child(COUPLE_CODE).child(Utils.CHILD_CALENDAR)
+                        DatabaseReference dateRef= mRef.child(Utils.CHILD_COUPLES).child(prefs).child(Utils.CHILD_CALENDAR)
                                 .child(String.valueOf(noOfChildren+1));
 
                         dateRef.child(Utils.MOMENT_DATE_TITLE).setValue(momentDate.title);

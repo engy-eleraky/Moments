@@ -34,6 +34,7 @@
         android:layout_alignParentBottom="true"
         android:background="@color/colorPrimary"
         android:text="@string/sign"
+        android:contentDescription="@string/sign_up"
         android:textAllCaps="false"
         android:textSize="@dimen/text_size" />
     <LinearLayout
@@ -57,7 +58,8 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="@dimen/image_height"
-            android:text="Log in"
+            android:text="@string/login"
+            android:contentDescription="@string/login"
             android:textAllCaps="false"
             android:background="@color/white"
             android:textSize="@dimen/text_size"

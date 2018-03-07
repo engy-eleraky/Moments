@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Display name"
+            android:text="@string/display_name"
             android:textSize="20sp"/>
 
         <TextView
@@ -34,14 +34,15 @@
             android:layout_marginTop="41dp"
             android:layout_gravity="center_horizontal"
             android:textSize="20sp"
-            android:text="Hi there............." />
+            android:text="@string/hi" />
 
         <Button
             android:id="@+id/buttonImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Change Image"
+            android:text="@string/change_image"
+            android:contentDescription="@string/change_image"
             android:layout_marginTop="18dp"
             android:textAllCaps="false"
             android:textSize="16sp"/>
@@ -52,7 +53,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="18dp"
-            android:text="Change Status"
+            android:text="@string/change_status"
+            android:contentDescription="@string/change_status"
             android:textAllCaps="false"
             android:textSize="16sp"/>
 

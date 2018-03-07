@@ -37,7 +37,7 @@ public class OfflineCapabilities extends Application {
         mAuth=FirebaseAuth.getInstance();
         mUser=mAuth.getCurrentUser();
         if(mUser!=null){
-            mReference=FirebaseDatabase.getInstance().getReference().child("Users").child(mUser.getUid());
+            mReference=FirebaseDatabase.getInstance().getReference().child(Utils.CHILD_USERS).child(mUser.getUid());
 
 
         }

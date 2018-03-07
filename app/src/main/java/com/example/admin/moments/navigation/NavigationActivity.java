@@ -25,6 +25,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.admin.moments.R;
+import com.example.admin.moments.Utils;
 import com.example.admin.moments.models.MomentDate;
 import com.example.admin.moments.settings.SettingsActivity;
 import com.example.admin.moments.signing.CheckCodeActivity;
@@ -68,13 +69,13 @@ public class NavigationActivity extends AppCompatActivity
 
         mAuth = FirebaseAuth.getInstance();
         if(mAuth.getCurrentUser()!=null){
-            mRef= FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
+            mRef= FirebaseDatabase.getInstance().getReference().child(Utils.CHILD_USERS).child(mAuth.getCurrentUser().getUid());
             mRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    String name=dataSnapshot.child("name").getValue().toString();
-                    final String image=dataSnapshot.child("image").getValue().toString();
-                    String email=dataSnapshot.child("email").getValue().toString();
+                    String name=dataSnapshot.child(Utils.NAME).getValue().toString();
+                    final String image=dataSnapshot.child(Utils.IMAGE).getValue().toString();
+                    String email=dataSnapshot.child(Utils.EMAIL).getValue().toString();
                     userText.setText(name);
                     emailText.setText(email);
 
@@ -169,6 +170,9 @@ public class NavigationActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+
+        ///////////////
+        //add media
         int id = item.getItemId();
         navigationView.setCheckedItem(id);
         Fragment fragment = null;

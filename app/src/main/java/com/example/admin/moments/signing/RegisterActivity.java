@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.admin.moments.R;
+import com.example.admin.moments.Utils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -46,7 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         mToolBar= findViewById(R.id.register_toolBar);
         setSupportActionBar(mToolBar);
-        getSupportActionBar().setTitle("Register");
+        getSupportActionBar().setTitle(Utils.REGISTER);
 
         mDialogue=new ProgressDialog(this);
         mAuth = FirebaseAuth.getInstance();
@@ -63,8 +64,8 @@ public class RegisterActivity extends AppCompatActivity {
                 String mDisplayPassward=mPassward.getEditableText().toString();
 
                 if(!TextUtils.isEmpty(mDisplayName) && !TextUtils.isEmpty(mDisplayEmail) && !TextUtils.isEmpty(mDisplayPassward)){
-                    mDialogue.setTitle("Registering user");
-                    mDialogue.setMessage("please wait");
+                    mDialogue.setTitle(Utils.REGISTER_MESSAGE);
+                    mDialogue.setMessage(Utils.WAIT);
                     mDialogue.setCanceledOnTouchOutside(false);
                     mDialogue.show();
 
@@ -72,7 +73,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                 }
                 else{
-                    Toast.makeText(RegisterActivity.this, "please enter your email/passward/name",
+                    Toast.makeText(RegisterActivity.this, Utils.ENTER,
                             Toast.LENGTH_SHORT).show();
                 }
 
@@ -94,14 +95,14 @@ public class RegisterActivity extends AppCompatActivity {
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             uid=user.getUid();
-                            mReference=FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+                            mReference=FirebaseDatabase.getInstance().getReference().child(Utils.CHILD_USERS).child(uid);
                             HashMap<String,String> map=new HashMap<>();
-                            map.put("name",mDisplayName);
-                            map.put("status","Hi .....");
-                            map.put("image","default");
-                            map.put("thumbnail","default");
-                            map.put("email",mDisplayEmail);
-                            map.put("id",uid);
+                            map.put(Utils.NAME,mDisplayName);
+                            map.put(Utils.STATUS,"Hi .....");
+                            map.put(Utils.IMAGE,"default");
+                            map.put(Utils.THUMBNAIL,"default");
+                            map.put(Utils.EMAIL,mDisplayEmail);
+                            map.put(Utils.ID,uid);
                            // map.put("online","true");
                             mReference.setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
@@ -109,7 +110,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         mDialogue.dismiss();
                                         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(RegisterActivity.this);
-                                        if(!prefs.getBoolean("firstTime", false)) {
+                                        if(!prefs.getBoolean(Utils.FIRST_TIME, false)) {
                                             Intent registerIntent = new Intent(RegisterActivity.this,CheckCodeActivity .class);
                                             registerIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                             startActivity(registerIntent);
@@ -117,7 +118,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                                         }
                                         else {
-                                            Toast.makeText(RegisterActivity.this, "fail to launch", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(RegisterActivity.this, Utils.FAIL_LAUNCH, Toast.LENGTH_LONG).show();
 
                                         }
                                     }
@@ -129,7 +130,7 @@ public class RegisterActivity extends AppCompatActivity {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             mDialogue.hide();
-                            Toast.makeText(RegisterActivity.this, "Authentication failed.",
+                            Toast.makeText(RegisterActivity.this, Utils.FAIL_AUTHENTICATION,
                                     Toast.LENGTH_SHORT).show();
                         }
 
