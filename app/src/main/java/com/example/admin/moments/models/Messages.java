@@ -6,7 +6,6 @@ package com.example.admin.moments.models;
 
 public class Messages {
     private String messages,type,from,time;
-    //private long time;
     private boolean seen;
     public Messages(String messages,boolean seen,String type,String from,String time){
         this.messages=messages;

@@ -41,8 +41,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -122,18 +124,11 @@ public class TimelineFragment extends Fragment {
                 String post = postEditText.getText().toString();
 
                 if (!post.equals("")) {
-                    final Calendar c = Calendar.getInstance();  // current date
-                    int year = c.get(Calendar.YEAR);
-                    int month = c.get(Calendar.MONTH);
-                    int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
-
-                    String separator = "/";
-                    String dateAsText = String.valueOf(dayOfMonth) + separator + String.valueOf(month+1) + separator + String.valueOf(year);
-
-                    final Timeline newPost = new Timeline(post, mCurrentUser.getUid(), dateAsText);
+                    String current_date= (DateFormat.getDateTimeInstance().format(new Date()));
+                    final Timeline newPost = new Timeline(post, mCurrentUser.getUid(), current_date);
                     addNewPostToDatabase(newPost);
                     adapter.addNewPost(newPost);
-                    if(downloadUrl!=null){
+                    if(downloadUrl!=null && !downloadUrl.isEmpty()){
                         newPost.setImage(downloadUrl);
                         addNewPostToDatabase(newPost);
                         adapter.addNewPost(newPost);
@@ -159,9 +154,8 @@ public class TimelineFragment extends Fragment {
                 map.put(Utils.MOMENT_POST, newPost.post);
                 map.put(Utils.MOMENT_DATE, newPost.date);
                 map.put(Utils.MOMENT_FROM, newPost.from);
-                ////////////////////////////
-                //fix that
-                if (newPost.getImage() != null) {
+
+                if (newPost.getImage() != null ) {
                     map.put(Utils.MOMENT_IMAGE, newPost.getImage());
                 }
 

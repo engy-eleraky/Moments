@@ -29,6 +29,12 @@ public class Utils {
     public static final String CHILD_MEDIA = "media";
     public static final String CHILD_MEDIA_STORAGE = "Media";
     public static final String CHILD_PROFILE_STORAGE = "profiles";
+    public static final String MESSAGE= "messages";
+    public static final String TIME= "time";
+    public static final String TYPE = "type";
+    public static final String SEEN = "seen";
+    public static final String FROM = "from";
+
 
 
 

@@ -151,7 +151,13 @@ public class ChatFragment extends Fragment {
         mSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendMessage();
+                final String message=mText.getText().toString();
+                String current_date= (DateFormat.getDateTimeInstance().format(new Date()));
+                boolean seen=false;
+                String type="text";
+                mUser=mAuth.getCurrentUser().getUid();
+                Messages newMessage=new Messages(message,seen,type,mUser,current_date);
+                sendMessage(newMessage);
             }
 
 
@@ -171,7 +177,52 @@ public class ChatFragment extends Fragment {
         return view;
     }
 
+    //map
+    private void sendMessage(final Messages messages) {
 
+            if(mAuth.getCurrentUser()!=null ) {
+                mReference = FirebaseDatabase.getInstance().getReference().child(Utils.CHILD_COUPLES);
+                String prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
+                mRefSendMessage=mReference.child(prefs).child(Utils.CHILD_CHAT).child(Utils.CHILD_MESSAGES);
+                mRefSendMessage.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        long messageNum =dataSnapshot.getChildrenCount();
+                        messageNumber= String.valueOf(messageNum+1);
+
+                        mRefSendMessage=mRefSendMessage.child(messageNumber);
+                        Map messageMap = new HashMap();
+                        messageMap.put(Utils.MESSAGE, messages.getMessages());
+                        messageMap.put(Utils.SEEN, messages.isSeen());
+                        messageMap.put(Utils.TYPE, messages.getType());
+                        messageMap.put(Utils.FROM, mUser);
+                        messageMap.put(Utils.TIME, messages.getTime());
+                        mRefSendMessage.setValue(messageMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful()){
+                                    Log.d(TAG," add it");
+                                }else{
+                                    Log.d(TAG,"doesn't add it");
+                                }
+                            }
+                        });
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                mText.setText("");
+
+
+            }
+
+    }
 
     private void loadMoreMessages() {
 
@@ -227,7 +278,7 @@ public class ChatFragment extends Fragment {
         }
 
     }
-
+//show
     private void loadMessages() {
         if(mAuth.getCurrentUser()!=null ){
 
@@ -283,56 +334,6 @@ public class ChatFragment extends Fragment {
 
     }
 
-    private void sendMessage() {
-        final String message=mText.getText().toString();
-        if(!TextUtils.isEmpty(message)){
-            if(mAuth.getCurrentUser()!=null ) {
-                mReference = FirebaseDatabase.getInstance().getReference().child(Utils.CHILD_COUPLES);
-                String prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
-                mRefSendMessage=mReference.child(prefs).child(Utils.CHILD_CHAT).child(Utils.CHILD_MESSAGES);
-                mRefSendMessage.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    ////////////////
-                    //enhance code
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        long messageNum= 1;
-                        messageNum +=dataSnapshot.getChildrenCount();
-                        messageNumber= String.valueOf(messageNum);
-                        String current_date= (DateFormat.getDateTimeInstance().format(new Date()));
-                        mRefSendMessage=mRefSendMessage.child(messageNumber);
-                        Map messageMap = new HashMap();
-                        messageMap.put("messages", message);
-                        messageMap.put("seen", false);
-                        messageMap.put("type", "text");
-                        messageMap.put("from", mUser);
-                        messageMap.put("time", current_date);
-                        mRefSendMessage.setValue(messageMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if(task.isSuccessful()){
-                                    Log.d(TAG," add it");
-                                }else{
-                                    Log.d(TAG,"doesn't add it");
-                                }
-                            }
-                        });
-
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-                mText.setText("");
-
-
-            }
-
-        }
-
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -341,7 +342,6 @@ public class ChatFragment extends Fragment {
         if (requestCode == GALLERY_PICK && resultCode == RESULT_OK) {
             mDialogue.setTitle(Utils.UPLOAD_PHOTO);
             mDialogue.setMessage(Utils.WAIT);
-           // mDialogue.setCanceledOnTouchOutside(false);
             mDialogue.show();
 
             Uri resultUri = data.getData();
@@ -350,7 +350,7 @@ public class ChatFragment extends Fragment {
                 prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
                 mRefSendMessage=mReference.child(prefs).child(Utils.CHILD_CHAT).child(Utils.CHILD_MESSAGES);
                 mRef=mReference.child(prefs).child(Utils.CHILD_CHAT).child(Utils.CHILD_MEDIA);
-
+                mUser=mAuth.getCurrentUser().getUid();
                 StorageReference filePath=mStorageRef.child(Utils.CHILD_MEDIA_STORAGE).child(prefs).child(code+".jpg");
                 filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
@@ -360,17 +360,17 @@ public class ChatFragment extends Fragment {
                             mRefSendMessage.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
-                                    long messageNum= 1;
-                                    messageNum +=dataSnapshot.getChildrenCount();
-                                    messageNumber= String.valueOf(messageNum);
+                                    long messageNum =dataSnapshot.getChildrenCount();
+                                    messageNumber= String.valueOf(messageNum+1);
                                     current_date= (DateFormat.getDateTimeInstance().format(new Date()));
+
                                     mRefSendMessage=mRefSendMessage.child(messageNumber);
                                     Map messageMap = new HashMap();
-                                    messageMap.put("messages", downloadUrl);
-                                    messageMap.put("seen", false);
-                                    messageMap.put("type", "image");
-                                    messageMap.put("from", mUser);
-                                    messageMap.put("time", current_date);
+                                    messageMap.put(Utils.MESSAGE, downloadUrl);
+                                    messageMap.put(Utils.SEEN, false);
+                                    messageMap.put(Utils.TYPE, Utils.IMAGE);
+                                    messageMap.put(Utils.FROM, mUser);
+                                    messageMap.put(Utils.TIME, current_date);
                                     mRefSendMessage.setValue(messageMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
@@ -396,8 +396,8 @@ public class ChatFragment extends Fragment {
                                 public void onDataChange(DataSnapshot dataSnapshot) {
 
                                     Map mediaMap = new HashMap();
-                                    mediaMap.put("image", downloadUrl);
-                                    mediaMap.put("time", current_date);
+                                    mediaMap.put(Utils.IMAGE, downloadUrl);
+                                    mediaMap.put(Utils.TIME, current_date);
                                     mRef.setValue(mediaMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {

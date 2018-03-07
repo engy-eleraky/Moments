@@ -36,7 +36,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.okhttp.internal.Util;
 
+import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class CalendarFragment extends Fragment implements DatePickerDialog.OnDateSetListener,
         AdapterView.OnItemSelectedListener{
@@ -50,11 +52,11 @@ public class CalendarFragment extends Fragment implements DatePickerDialog.OnDat
     private LinearLayout doneButton;
 
     private int selectedReminderOption;
-    private String dateAsText;
 
     private DatabaseReference mRef;
     private String prefs="";
-
+    private String dateAsText;
+    String current_date;
     public CalendarFragment() {
         // Required empty public constructor
     }
@@ -85,14 +87,8 @@ public class CalendarFragment extends Fragment implements DatePickerDialog.OnDat
             }
         });
 
-        final Calendar c = Calendar.getInstance();  // current date
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
-
-        String separator = "/";
-        dateAsText = String.valueOf(dayOfMonth) + separator + String.valueOf(month+1) + separator + String.valueOf(year);
-        dateButton.setText(dateAsText);
+        current_date= (DateFormat.getDateTimeInstance().format(new Date()));
+        dateButton.setText(current_date);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.reminder_spinner_list, android.R.layout.simple_spinner_item);
