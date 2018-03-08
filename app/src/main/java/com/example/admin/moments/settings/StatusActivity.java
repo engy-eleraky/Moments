@@ -25,10 +25,11 @@ public class StatusActivity extends AppCompatActivity {
     private DatabaseReference mReference;
     private FirebaseUser mUser;
     private ProgressDialog mDialogue;
+    private  String status;
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_status);
         mToolBarStatus= findViewById(R.id.status_toolBar);
@@ -40,10 +41,21 @@ public class StatusActivity extends AppCompatActivity {
         String mUid=mUser.getUid();
         mReference= FirebaseDatabase.getInstance().getReference().child(Utils.CHILD_USERS).child(mUid);
 
-         //get status from settings
+        //get status from settings
         String statusValue=getIntent().getStringExtra(SettingsActivity.STATUS);
         mStatus=findViewById(R.id.textInputLayoutStatus);
         mStatus.getEditText().setText(statusValue);
+
+        if(savedInstanceState!=null){
+            String saved_status=savedInstanceState.getString("status");
+            mStatus.getEditText().setText(saved_status);
+            status=mStatus.getEditText().getText().toString();
+        }else{
+            status=mStatus.getEditText().getText().toString();
+
+        }
+
+
 
         //save new status
         mSave=findViewById(R.id.buttonSave);
@@ -55,7 +67,6 @@ public class StatusActivity extends AppCompatActivity {
                 mDialogue.setMessage(Utils.WAIT);
                 mDialogue.show();
 
-                String status=mStatus.getEditText().getText().toString();
                 mReference.child(Utils.STATUS).setValue(status).addOnCompleteListener(new OnCompleteListener<Void>() {
                  @Override
                  public void onComplete(@NonNull Task<Void> task) {
@@ -72,5 +83,10 @@ public class StatusActivity extends AppCompatActivity {
             }
         });
 
+    }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("status",mStatus.getEditText().getText().toString());
     }
 }

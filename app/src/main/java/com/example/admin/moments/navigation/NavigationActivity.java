@@ -112,11 +112,12 @@ public class NavigationActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-
-        //NOTE:  Open fragment1 initially.
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.mainFrame, new ChatFragment());
-        ft.commit();
+         if(savedInstanceState==null) {
+             //NOTE:  Open fragment1 initially.
+             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+             ft.replace(R.id.mainFrame, new ChatFragment());
+             ft.commit();
+         }
     }
 
 

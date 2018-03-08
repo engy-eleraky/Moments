@@ -6,8 +6,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -92,6 +95,10 @@ public class ChatFragment extends Fragment {
     String prefs="";
     String downloadUrl="";
     String current_date="";
+    private static final String SAVED_LAYOUT1_MANAGER = "Layout";
+    Parcelable layout1;
+    public static int index = -1;
+    public static int top = -1;
     public ChatFragment() {
     }
 
@@ -102,7 +109,21 @@ public class ChatFragment extends Fragment {
         setHasOptionsMenu(true);
 
     }
+/*    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putParcelable(SAVED_LAYOUT1_MANAGER, mRecycle.getLayoutManager().onSaveInstanceState());
+        super.onSaveInstanceState(outState);
 
+
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState!=null  ){
+            layout1 = savedInstanceState.getParcelable(SAVED_LAYOUT1_MANAGER);
+        }
+    }*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -132,9 +153,7 @@ public class ChatFragment extends Fragment {
         for (int i = 0 ; i < 6 ; i++) {
             code += String.valueOf(random.nextInt(10));
         }
-
-        loadMessages();
-
+      loadMessages();
 
         //add
         mAdd.setOnClickListener(new View.OnClickListener() {
@@ -180,47 +199,47 @@ public class ChatFragment extends Fragment {
     //map
     private void sendMessage(final Messages messages) {
 
-            if(mAuth.getCurrentUser()!=null ) {
-                mReference = FirebaseDatabase.getInstance().getReference().child(Utils.CHILD_COUPLES);
-                String prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
-                mRefSendMessage=mReference.child(prefs).child(Utils.CHILD_CHAT).child(Utils.CHILD_MESSAGES);
-                mRefSendMessage.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
+        if(mAuth.getCurrentUser()!=null ) {
+            mReference = FirebaseDatabase.getInstance().getReference().child(Utils.CHILD_COUPLES);
+            String prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
+            mRefSendMessage=mReference.child(prefs).child(Utils.CHILD_CHAT).child(Utils.CHILD_MESSAGES);
+            mRefSendMessage.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
 
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        long messageNum =dataSnapshot.getChildrenCount();
-                        messageNumber= String.valueOf(messageNum+1);
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    long messageNum =dataSnapshot.getChildrenCount();
+                    messageNumber= String.valueOf(messageNum+1);
 
-                        mRefSendMessage=mRefSendMessage.child(messageNumber);
-                        Map messageMap = new HashMap();
-                        messageMap.put(Utils.MESSAGE, messages.getMessages());
-                        messageMap.put(Utils.SEEN, messages.isSeen());
-                        messageMap.put(Utils.TYPE, messages.getType());
-                        messageMap.put(Utils.FROM, mUser);
-                        messageMap.put(Utils.TIME, messages.getTime());
-                        mRefSendMessage.setValue(messageMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if(task.isSuccessful()){
-                                    Log.d(TAG," add it");
-                                }else{
-                                    Log.d(TAG,"doesn't add it");
-                                }
+                    mRefSendMessage=mRefSendMessage.child(messageNumber);
+                    Map messageMap = new HashMap();
+                    messageMap.put(Utils.MESSAGE, messages.getMessages());
+                    messageMap.put(Utils.SEEN, messages.isSeen());
+                    messageMap.put(Utils.TYPE, messages.getType());
+                    messageMap.put(Utils.FROM, mUser);
+                    messageMap.put(Utils.TIME, messages.getTime());
+                    mRefSendMessage.setValue(messageMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                Log.d(TAG," add it");
+                            }else{
+                                Log.d(TAG,"doesn't add it");
                             }
-                        });
+                        }
+                    });
 
 
-                    }
+                }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
-                mText.setText("");
+                }
+            });
+            mText.setText("");
 
 
-            }
+        }
 
     }
 
@@ -278,7 +297,8 @@ public class ChatFragment extends Fragment {
         }
 
     }
-//show
+
+    //show
     private void loadMessages() {
         if(mAuth.getCurrentUser()!=null ){
 
@@ -305,7 +325,6 @@ public class ChatFragment extends Fragment {
                     mAdapter.notifyDataSetChanged();
                     mRecycle.scrollToPosition(messageList.size()-1);
                     mRefresh.setRefreshing(false);
-
                 }
 
                 @Override
@@ -333,6 +352,26 @@ public class ChatFragment extends Fragment {
 
 
     }
+
+  /*  @Override
+    public void onPause()
+    {
+        super.onPause();
+        //read current recyclerview position
+        index = mLinear.findFirstVisibleItemPosition();
+        View v = mRecycle.getChildAt(0);
+        top = (v == null) ? 0 : (v.getTop() - mRecycle.getPaddingTop());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //set recyclerview position
+        if (index != -1) {
+            mLinear.scrollToPositionWithOffset(index, top);
+        }
+    }*/
+
 
 
     @Override
@@ -465,4 +504,10 @@ public class ChatFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(String title );
     }
+   /* private void restoreLayoutManagerPosition() {
+        if (layout1 != null  ) {
+            mRecycle.getLayoutManager().onRestoreInstanceState(layout1);
+
+        }
+    }*/
 }

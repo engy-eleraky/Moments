@@ -8,9 +8,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -61,8 +63,7 @@ public class TimelineFragment extends Fragment {
     EditText postEditText;
     ImageButton addImageButton;
     ImageButton postButton;
-    RecyclerView recyclerView;
-    TimelineAdapter adapter;
+
 
     FirebaseAuth mAuth;
     FirebaseUser mCurrentUser;
@@ -75,11 +76,32 @@ public class TimelineFragment extends Fragment {
     private ProgressDialog mDialogue;
     String code="";
     String downloadUrl="";
+    RecyclerView recyclerView;
+    TimelineAdapter adapter;
+    RecyclerView.LayoutManager mLayout;
+    Parcelable layout1;
+    private static final String SAVED_LAYOUT1_MANAGER = "Layout";
+
 
     public TimelineFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putParcelable(SAVED_LAYOUT1_MANAGER, recyclerView.getLayoutManager().onSaveInstanceState());
+        super.onSaveInstanceState(outState);
+
+
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState!=null  ){
+            layout1 = savedInstanceState.getParcelable(SAVED_LAYOUT1_MANAGER);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -102,8 +124,11 @@ public class TimelineFragment extends Fragment {
         mDialogue=new ProgressDialog(getActivity());
 
         recyclerView = view.findViewById(R.id.timelineRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        mLayout=new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(mLayout);
+        if(savedInstanceState!=null){}else{}
         getTimelinePosts();
+        restoreLayoutManagerPosition();
 
         //generate code
         Random random = new Random();
@@ -247,5 +272,12 @@ public class TimelineFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(String title);
 
+    }
+
+    private void restoreLayoutManagerPosition() {
+        if (layout1 != null  ) {
+            recyclerView.getLayoutManager().onRestoreInstanceState(layout1);
+
+        }
     }
 }
