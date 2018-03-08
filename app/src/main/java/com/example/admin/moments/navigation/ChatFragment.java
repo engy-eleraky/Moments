@@ -109,7 +109,7 @@ public class ChatFragment extends Fragment {
         setHasOptionsMenu(true);
 
     }
-/*    @Override
+    @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putParcelable(SAVED_LAYOUT1_MANAGER, mRecycle.getLayoutManager().onSaveInstanceState());
         super.onSaveInstanceState(outState);
@@ -123,7 +123,7 @@ public class ChatFragment extends Fragment {
         if (savedInstanceState!=null  ){
             layout1 = savedInstanceState.getParcelable(SAVED_LAYOUT1_MANAGER);
         }
-    }*/
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -322,8 +322,13 @@ public class ChatFragment extends Fragment {
                     messageList.add(messageData);
                     mAdapter=new MessagesAdapter(getActivity(),messageList);
                     mRecycle.setAdapter(mAdapter);
-                    mAdapter.notifyDataSetChanged();
+                   // mAdapter.notifyDataSetChanged();
+                    if(layout1!=null){
+                        restoreLayoutManagerPosition();
+                    }else{
                     mRecycle.scrollToPosition(messageList.size()-1);
+
+                   }
                     mRefresh.setRefreshing(false);
                 }
 
@@ -352,25 +357,6 @@ public class ChatFragment extends Fragment {
 
 
     }
-
-  /*  @Override
-    public void onPause()
-    {
-        super.onPause();
-        //read current recyclerview position
-        index = mLinear.findFirstVisibleItemPosition();
-        View v = mRecycle.getChildAt(0);
-        top = (v == null) ? 0 : (v.getTop() - mRecycle.getPaddingTop());
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        //set recyclerview position
-        if (index != -1) {
-            mLinear.scrollToPositionWithOffset(index, top);
-        }
-    }*/
 
 
 
@@ -504,10 +490,10 @@ public class ChatFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(String title );
     }
-   /* private void restoreLayoutManagerPosition() {
+    private void restoreLayoutManagerPosition() {
         if (layout1 != null  ) {
             mRecycle.getLayoutManager().onRestoreInstanceState(layout1);
 
         }
-    }*/
+    }
 }
