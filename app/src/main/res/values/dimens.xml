@@ -8,7 +8,6 @@
     <dimen name="text_size_welcome">20sp</dimen>
     <dimen name="image_dimen">30dp</dimen>
     <dimen name="margin_start_image">10dp</dimen>
-
     <!--start-->
     <dimen name="text_size">22sp</dimen>
     <dimen name="image_height">60dp</dimen>

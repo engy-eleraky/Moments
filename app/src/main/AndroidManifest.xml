@@ -37,8 +37,12 @@
         <activity
             android:name=".navigation.NavigationActivity"
             android:label="@string/title_activity_navigation"
-            android:theme="@style/AppTheme"></activity>
-        <activity android:name=".signing.CheckCodeActivity"></activity>
+            android:theme="@style/AppTheme">
+
+        </activity>
+        <activity android:name=".signing.CheckCodeActivity">
+
+        </activity>
 
         <receiver android:name=".widget.ChatWidgetProvider">
             <intent-filter>
