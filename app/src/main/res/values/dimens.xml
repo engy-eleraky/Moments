@@ -19,7 +19,6 @@
     <dimen name="margin_top_login">100dp</dimen>
     <dimen name="margin_start_login">120dp</dimen>
 
-
     <!--fragments-->
     <dimen name="margin_top_text">5dp</dimen>
     <dimen name="layout_width">50dp</dimen>
