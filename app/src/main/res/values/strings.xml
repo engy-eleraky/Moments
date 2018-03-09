@@ -28,9 +28,9 @@
     <string name="hello_timeline_fragment">Hello timeline fragment</string>
     <string name="hello_calendar_fragment">Hello calendar fragment</string>
     <string-array name="reminder_spinner_list">
-        <item>day before</item>
-        <item>month before</item>
-        <item>week before</item>
+        <item>one day before</item>
+        <item>one month before</item>
+        <item>one week before</item>
 
     </string-array>
 
@@ -59,21 +59,10 @@
     <string name="message_text">TextView</string>
     <string name="message_time">4/3/2018 11:45:5 AM</string>
     <string name="post_time">4/3/2018</string>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    <string name="passward">passward</string>
+    <string name="email">email</string>
+    <string name="name">name</string>
+    <string name="title_activity_image_view">ImageViewActivity</string>
 
 
 

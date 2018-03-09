@@ -4,8 +4,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
@@ -51,6 +53,9 @@ import com.google.gson.Gson;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -58,6 +63,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
+import id.zelory.compressor.Compressor;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -93,12 +100,11 @@ public class ChatFragment extends Fragment {
 
     String code="";
     String prefs="";
-    String downloadUrl="";
+    // String downloadUrl="";
     String current_date="";
     private static final String SAVED_LAYOUT1_MANAGER = "Layout";
     Parcelable layout1;
-    public static int index = -1;
-    public static int top = -1;
+
     public ChatFragment() {
     }
 
@@ -153,7 +159,7 @@ public class ChatFragment extends Fragment {
         for (int i = 0 ; i < 6 ; i++) {
             code += String.valueOf(random.nextInt(10));
         }
-      loadMessages();
+        loadMessages();
 
         //add
         mAdd.setOnClickListener(new View.OnClickListener() {
@@ -201,7 +207,8 @@ public class ChatFragment extends Fragment {
 
         if(mAuth.getCurrentUser()!=null ) {
             mReference = FirebaseDatabase.getInstance().getReference().child(Utils.CHILD_COUPLES);
-            String prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
+            // String prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
+            String prefs=Utils.getCoupleCode(getActivity());
             mRefSendMessage=mReference.child(prefs).child(Utils.CHILD_CHAT).child(Utils.CHILD_MESSAGES);
             mRefSendMessage.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -248,7 +255,8 @@ public class ChatFragment extends Fragment {
         if(mAuth.getCurrentUser()!=null ){
             mReference= FirebaseDatabase.getInstance().getReference().child(Utils.CHILD_COUPLES);
             mUser=mAuth.getCurrentUser().getUid();
-            String prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
+            // String prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
+            String prefs=Utils.getCoupleCode(getActivity());
             final DatabaseReference mRefMessages=mReference.child(prefs).child(Utils.CHILD_CHAT).child(Utils.CHILD_MESSAGES);
             final Query messageQuery=mRefMessages.orderByKey().endAt(mLastKey).limitToLast(10);
 
@@ -304,8 +312,8 @@ public class ChatFragment extends Fragment {
 
             mReference= FirebaseDatabase.getInstance().getReference().child(Utils.CHILD_COUPLES);
             mUser=mAuth.getCurrentUser().getUid();
-            String prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
-
+            // String prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
+            String prefs=Utils.getCoupleCode(getActivity());
             mRefMessages=mReference.child(prefs).child(Utils.CHILD_CHAT).child(Utils.CHILD_MESSAGES);
             final Query messageQuery=mRefMessages.limitToLast(mCurrentPage*itemsToLoad);
 
@@ -322,13 +330,13 @@ public class ChatFragment extends Fragment {
                     messageList.add(messageData);
                     mAdapter=new MessagesAdapter(getActivity(),messageList);
                     mRecycle.setAdapter(mAdapter);
-                   // mAdapter.notifyDataSetChanged();
+                    // mAdapter.notifyDataSetChanged();
                     if(layout1!=null){
                         restoreLayoutManagerPosition();
                     }else{
-                    mRecycle.scrollToPosition(messageList.size()-1);
+                        mRecycle.scrollToPosition(messageList.size()-1);
 
-                   }
+                    }
                     mRefresh.setRefreshing(false);
                 }
 
@@ -369,19 +377,25 @@ public class ChatFragment extends Fragment {
             mDialogue.setMessage(Utils.WAIT);
             mDialogue.show();
 
-            Uri resultUri = data.getData();
+            final Uri resultUri = data.getData();
             if(mAuth.getCurrentUser()!=null){
                 mReference = FirebaseDatabase.getInstance().getReference().child(Utils.CHILD_COUPLES);
-                prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
+                //prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
+                prefs=Utils.getCoupleCode(getActivity());
                 mRefSendMessage=mReference.child(prefs).child(Utils.CHILD_CHAT).child(Utils.CHILD_MESSAGES);
                 mRef=mReference.child(prefs).child(Utils.CHILD_CHAT).child(Utils.CHILD_MEDIA);
                 mUser=mAuth.getCurrentUser().getUid();
-                StorageReference filePath=mStorageRef.child(Utils.CHILD_MEDIA_STORAGE).child(prefs).child(code+".jpg");
+
+
+                final StorageReference filePath=mStorageRef.child(Utils.CHILD_MEDIA_STORAGE).child(prefs).child(code+".jpg");
+
                 filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                         if(task.isSuccessful()){
+
                             final String downloadUrl=task.getResult().getDownloadUrl().toString();
+
                             mRefSendMessage.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -416,14 +430,15 @@ public class ChatFragment extends Fragment {
                                 }
                             });
                             mText.setText("");
+
                             mRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
 
                                     Map mediaMap = new HashMap();
-                                    mediaMap.put(Utils.IMAGE, downloadUrl);
-                                    mediaMap.put(Utils.TIME, current_date);
-                                    mRef.setValue(mediaMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    mediaMap.put(Utils.MEDIA_URL_KEY, downloadUrl);
+                                    //mediaMap.put(Utils.TIME, current_date);
+                                    mRef.child(messageNumber).setValue(mediaMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if(task.isSuccessful()){
@@ -445,6 +460,8 @@ public class ChatFragment extends Fragment {
                         }
                     }
                 });
+
+
             }
         }
     }

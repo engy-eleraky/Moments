@@ -39,9 +39,5 @@
 
     </group>
 
-    <!--<item
-      android:id="@+id/nav_calendar"
-      android:icon="@drawable/ic_event_note_black_24dp"
-      android:title="Calendar" />-->
 
 </menu>

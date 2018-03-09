@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--//TODO:fix dimens-->
+
     <!--splash-->
     <dimen name="margin_bottom">48dp</dimen>
     <dimen name="margin_start">35dp</dimen>
@@ -10,6 +12,13 @@
     <!--start-->
     <dimen name="text_size">22sp</dimen>
     <dimen name="image_height">60dp</dimen>
+    <dimen name="margin_top_register">100dp</dimen>
+    <dimen name="margin_top_register_2">60dp</dimen>
+    <dimen name="margin_top_register_3">46dp</dimen>
+    <dimen name="layout_width_login">368dp</dimen>
+
+    <!--fragments-->
+    <dimen name="margin_top_text">5dp</dimen>
 
     <!--tutorial-->
     <dimen name="layout_margin_bottom">54dp</dimen>
@@ -19,6 +28,7 @@
     <dimen name="padding_right">2dp</dimen>
     <dimen name="text_margin_bottom">27dp</dimen>
     <dimen name="text_margin_start">132dp</dimen>
+
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>

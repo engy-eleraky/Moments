@@ -1,19 +1,17 @@
 package com.example.admin.moments.navigation;
 
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.DialogFragment;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -23,27 +21,28 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.admin.moments.R;
 import com.example.admin.moments.Utils;
+import com.example.admin.moments.adapters.TimelineAdapter;
 import com.example.admin.moments.models.MomentDate;
+import com.example.admin.moments.models.Timeline;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.okhttp.internal.Util;
 
-import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.Iterator;
 
 public class CalendarFragment extends Fragment implements DatePickerDialog.OnDateSetListener,
         AdapterView.OnItemSelectedListener{
-    private ChatFragment.OnFragmentInteractionListener mListener;
+    private OnFragmentInteractionListener mListener;
     private OnNewDateAddedListener dateAddedListener;
+   // private ShowListener calendarListener;
 
     private EditText titleInput;
     private Button dateButton;
@@ -51,16 +50,23 @@ public class CalendarFragment extends Fragment implements DatePickerDialog.OnDat
     private LinearLayout cancelButton;
     private LinearLayout doneButton;
 
-    private int selectedReminderOption;
+    private int selectedReminderOption = 0;
+    private String dateAsText;
 
     private DatabaseReference mRef;
-    private String prefs="";
-    private String dateAsText;
-    String current_date;
+    private String COUPLE_CODE;
+
+
     public CalendarFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,17 +74,18 @@ public class CalendarFragment extends Fragment implements DatePickerDialog.OnDat
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_calendar, container, false);
         if (mListener != null) {
-            mListener.onFragmentInteraction(Utils.CHILD_CALENDAR);
+            mListener.onFragmentInteraction("Calendar");
         }
 
         mRef = FirebaseDatabase.getInstance().getReference();
-        prefs = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE, "");
+        //COUPLE_CODE = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE, "");
+        COUPLE_CODE=Utils.getCoupleCode(getActivity());
+        reminderSpinner = (Spinner) view.findViewById(R.id.reminderSpinner);
+        dateButton = (Button) view.findViewById(R.id.dateButton);
+        titleInput = (EditText) view.findViewById(R.id.titleInput);
+        doneButton = (LinearLayout) view.findViewById(R.id.doneButton);
+        cancelButton = (LinearLayout) view.findViewById(R.id.cancelButton);
 
-        reminderSpinner = view.findViewById(R.id.reminderSpinner);
-        dateButton = view.findViewById(R.id.dateButton);
-        titleInput = view.findViewById(R.id.titleInput);
-        doneButton = view.findViewById(R.id.doneButton);
-        cancelButton = view.findViewById(R.id.cancelButton);
 
         dateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,8 +94,14 @@ public class CalendarFragment extends Fragment implements DatePickerDialog.OnDat
             }
         });
 
-        current_date= (DateFormat.getDateTimeInstance().format(new Date()));
-        dateButton.setText(current_date);
+        final Calendar c = Calendar.getInstance();  // current date
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
+
+        String separator = "/";
+        dateAsText = String.valueOf(dayOfMonth) + separator + String.valueOf(month+1) + separator + String.valueOf(year);
+        dateButton.setText(dateAsText);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.reminder_spinner_list, android.R.layout.simple_spinner_item);
@@ -105,11 +118,11 @@ public class CalendarFragment extends Fragment implements DatePickerDialog.OnDat
 
                 final MomentDate momentDate = new MomentDate(title, date, selectedReminderOption);
 
-                mRef.child(Utils.CHILD_COUPLES).child(prefs).child(Utils.CHILD_CALENDAR).addListenerForSingleValueEvent(new ValueEventListener() {
+                mRef.child(Utils.CHILD_COUPLES).child(COUPLE_CODE).child(Utils.CHILD_CALENDAR).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         long noOfChildren = dataSnapshot.getChildrenCount();
-                        DatabaseReference dateRef= mRef.child(Utils.CHILD_COUPLES).child(prefs).child(Utils.CHILD_CALENDAR)
+                        DatabaseReference dateRef= mRef.child(Utils.CHILD_COUPLES).child(COUPLE_CODE).child(Utils.CHILD_CALENDAR)
                                 .child(String.valueOf(noOfChildren+1));
 
                         dateRef.child(Utils.MOMENT_DATE_TITLE).setValue(momentDate.title);
@@ -117,8 +130,20 @@ public class CalendarFragment extends Fragment implements DatePickerDialog.OnDat
                         dateRef.child(Utils.MOMENT_DATE_REMIND).setValue(momentDate.remind);
 
                         momentDate.setId((int) (noOfChildren+1));
-                        dateAddedListener.onNewDateAdded(momentDate);
+
+                       // Utils.setNearestAlarmActive(getActivity());
+
+
+                        if (dateAddedListener != null) {
+                            dateAddedListener.onNewDateAdded(momentDate);
+                        }
+                       /* if ( calendarListener!= null){
+                            calendarListener.getCalendars(momentDate);
+                        }*/
                     }
+
+
+
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
@@ -130,14 +155,26 @@ public class CalendarFragment extends Fragment implements DatePickerDialog.OnDat
             }
         });
 
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Fragment fragment=new ChatFragment();
+
+                FragmentTransaction ft=getActivity().getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.mainFrame,fragment);
+                ft.commit();
+            }
+        });
+
         return view;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof ChatFragment.OnFragmentInteractionListener) {
-            mListener = (ChatFragment.OnFragmentInteractionListener) context;
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnNewDateAddedListener");
@@ -149,6 +186,12 @@ public class CalendarFragment extends Fragment implements DatePickerDialog.OnDat
             throw new RuntimeException(context.toString()
                     + " must implement OnNewDateAddedListener");
         }
+       /* if (context instanceof ShowListener) {
+            calendarListener = (ShowListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnNewDateAddedListener");
+        }*/
     }
 
     @Override
@@ -156,7 +199,6 @@ public class CalendarFragment extends Fragment implements DatePickerDialog.OnDat
         super.onDetach();
         mListener = null;
     }
-
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -198,4 +240,7 @@ public class CalendarFragment extends Fragment implements DatePickerDialog.OnDat
     interface OnNewDateAddedListener {
         void onNewDateAdded(MomentDate momentDate);
     }
+   /* interface ShowListener {
+        void getCalendars();
+    }*/
 }

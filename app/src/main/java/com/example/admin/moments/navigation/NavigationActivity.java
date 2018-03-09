@@ -41,6 +41,9 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class NavigationActivity extends AppCompatActivity
@@ -48,20 +51,32 @@ public class NavigationActivity extends AppCompatActivity
         ChatFragment.OnFragmentInteractionListener,
         TimelineFragment.OnFragmentInteractionListener,
         CalendarFragment.OnFragmentInteractionListener ,
-        CalendarFragment.OnNewDateAddedListener{
+        MediaFragment.OnFragmentInteractionListener,
+        CalendarFragment.OnNewDateAddedListener
+        //,ShowListener
+
+         {
 
     private FirebaseAuth mAuth;
     private DatabaseReference mRef;
     private NavigationView navigationView;
+    private ShowListener calendarListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
+        /*getCalendars();
+         String prefs=PreferenceManager
+                 .getDefaultSharedPreferences(this)
+                 .getString("cal", "");*/
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
          //NOTE:  Checks first item in the navigation drawer initially
         navigationView.setCheckedItem(R.id.nav_chat);
+     //   navigationView.getMenu().add(prefs);
+
         View hView =  navigationView.getHeaderView(0);
         final TextView userText=hView.findViewById(R.id.userText);
         final TextView emailText=hView.findViewById(R.id.textView);
@@ -111,6 +126,7 @@ public class NavigationActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
 
          if(savedInstanceState==null) {
              //NOTE:  Open fragment1 initially.
@@ -172,8 +188,6 @@ public class NavigationActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
 
-        ///////////////
-        //add media
         int id = item.getItemId();
         navigationView.setCheckedItem(id);
         Fragment fragment = null;
@@ -183,6 +197,8 @@ public class NavigationActivity extends AppCompatActivity
             fragment = new TimelineFragment();
         } else if (id == R.id.nav_new_date) {
             fragment = new CalendarFragment();
+        }else if(id == R.id.nav_Media){
+            fragment = new MediaFragment();
         }
         //NOTE: Fragment changing code
         if (fragment != null) {
@@ -204,14 +220,51 @@ public class NavigationActivity extends AppCompatActivity
 
     @Override
     public void onNewDateAdded(MomentDate momentDate) {
+
        navigationView.getMenu().add(R.id.calendar_group,momentDate.getId(),0,momentDate.title);
+
        Fragment fragment=new ChatFragment();
 
        FragmentTransaction ft=getSupportFragmentManager().beginTransaction();
        ft.replace(R.id.mainFrame,fragment);
        ft.commit();
+
     }
 
 
+   /* @Override
+    //show
+    public void getCalendars() {
+
+        //prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
+        String prefs=Utils.getCoupleCode(this);
+        DatabaseReference mRef=FirebaseDatabase.getInstance().getReference();
+        mRef.child(Utils.CHILD_COUPLES).child(prefs).child(Utils.CHILD_CALENDAR).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
+
+                ArrayList<MomentDate> events = new ArrayList<>();
+                while (iterator.hasNext()) {
+                    DataSnapshot eventSnapshot = iterator.next();
+                    MomentDate event = eventSnapshot.getValue(MomentDate.class);
+                     event.title.toString();
+
+                }
+
+
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(NavigationActivity.this);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("cal", events.toString());
+                editor.apply();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+*/
 
 }

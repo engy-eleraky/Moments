@@ -1,10 +1,12 @@
 package com.example.admin.moments.models;
 
+import java.io.Serializable;
+
 /**
  * Created by ADMIN on 3/4/2018.
  */
 
-public class MomentDate {
+public class MomentDate implements Serializable {
     public String title;
     public String date;
     public int remind;

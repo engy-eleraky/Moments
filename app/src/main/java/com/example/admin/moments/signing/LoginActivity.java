@@ -50,18 +50,18 @@ public class LoginActivity extends AppCompatActivity {
                 String mDisplayEmail = mEmail.getEditableText().toString();
                 String mDisplayPassward = mPassward.getEditableText().toString();
 
-            if( !TextUtils.isEmpty(mDisplayEmail) && !TextUtils.isEmpty(mDisplayPassward)){
-                mDialogue.setTitle(Utils.LOGGING_MESSAGE);
-                mDialogue.setMessage(Utils.WAIT);
-                mDialogue.setCanceledOnTouchOutside(false);
-                mDialogue.show();
-                login(mDisplayEmail,mDisplayPassward);
+                if( !TextUtils.isEmpty(mDisplayEmail) && !TextUtils.isEmpty(mDisplayPassward)){
+                    mDialogue.setTitle(Utils.LOGGING_MESSAGE);
+                    mDialogue.setMessage(Utils.WAIT);
+                    mDialogue.setCanceledOnTouchOutside(false);
+                    mDialogue.show();
+                    login(mDisplayEmail,mDisplayPassward);
 
-            }
-            else{
-                Toast.makeText(LoginActivity.this, Utils.ENTER,
-                        Toast.LENGTH_SHORT).show();
-            }
+                }
+                else{
+                    Toast.makeText(LoginActivity.this, Utils.ENTER,
+                            Toast.LENGTH_SHORT).show();
+                }
 
 
             }
@@ -69,37 +69,37 @@ public class LoginActivity extends AppCompatActivity {
     }
     private void login(String mDisplayEmail, String mDisplayPassward) {
 
-            mAuth.signInWithEmailAndPassword(mDisplayEmail, mDisplayPassward)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                mDialogue.dismiss();
-                                // Sign in success, update UI with the signed-in user's information
-                                Log.d(TAG, "signInWithEmail:success");
-                                if (PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).contains(Utils.COUPLE_KEYCODE)) {
-                                    Intent logIntent=new Intent(LoginActivity.this,NavigationActivity.class);
-                                    logIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                    startActivity(logIntent);
-                                    finish();
-                                } else {
-                                    Intent intent = new Intent(LoginActivity.this, CheckCodeActivity.class);
-                                    startActivity(intent);
-                                   finish();
-                                }
-
-
+        mAuth.signInWithEmailAndPassword(mDisplayEmail, mDisplayPassward)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            mDialogue.dismiss();
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithEmail:success");
+                            if (PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).contains(Utils.COUPLE_KEYCODE)) {
+                                Intent logIntent=new Intent(LoginActivity.this,NavigationActivity.class);
+                                logIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(logIntent);
+                                finish();
                             } else {
-                                mDialogue.hide();
-                                // If sign in fails, display a message to the user.
-                                Log.w(TAG, "signInWithEmail:failure", task.getException());
-                                Toast.makeText(LoginActivity.this, Utils.FAIL_AUTHENTICATION,
-                                        Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(LoginActivity.this, CheckCodeActivity.class);
+                                startActivity(intent);
+                                finish();
                             }
 
 
+                        } else {
+                            mDialogue.hide();
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithEmail:failure", task.getException());
+                            Toast.makeText(LoginActivity.this, Utils.FAIL_AUTHENTICATION,
+                                    Toast.LENGTH_SHORT).show();
                         }
-                    });
+
+
+                    }
+                });
 
 
     }

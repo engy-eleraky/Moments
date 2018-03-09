@@ -170,7 +170,8 @@ public class TimelineFragment extends Fragment {
     //add post
     //enhanced code
     private void addNewPostToDatabase(final Timeline newPost) {
-        prefs= PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
+        //prefs= PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
+        prefs=Utils.getCoupleCode(getActivity());
         mRef.child(Utils.CHILD_COUPLES).child(prefs).child(Utils.CHILD_TIMELINE).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -195,7 +196,8 @@ public class TimelineFragment extends Fragment {
     }
     //show
     private void getTimelinePosts() {
-        prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
+        //prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
+        prefs=Utils.getCoupleCode(getActivity());
         mRef.child(Utils.CHILD_COUPLES).child(prefs).child(Utils.CHILD_TIMELINE).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -235,8 +237,8 @@ public class TimelineFragment extends Fragment {
             mDialogue.setTitle(Utils.UPLOAD_PHOTO);
             mDialogue.setMessage(Utils.WAIT);
             mDialogue.show();
-            prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
-
+            //prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
+            prefs=Utils.getCoupleCode(getActivity());
             Uri resultUri = data.getData();
             StorageReference filePath=storageRef.child(Utils.CHILD_TIMELINE).child(prefs).child(code+".jpg");
             filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
