@@ -49,45 +49,11 @@ public class FirebaseService extends IntentService {
             if (ACTION_GET_MEDIA.equals(action)) {
                 handleActionGetMedia();
             }
-            /*else if (ACTION_ALARM.equals(action)){
-                handleActionAlarm((MomentDate) intent.getSerializableExtra(Intent.EXTRA_RETURN_RESULT));
-            }*/
+
         }
     }
 
-   /* private void handleActionAlarm(MomentDate momentDate) {
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setContentTitle(momentDate.title)
-                .setContentText(getNotificationText(momentDate));
 
-        Intent intent = new Intent(this, NavigationActivity.class);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-                this,
-                NOTIFICATION_REQUEST,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
-        );
-
-        notificationBuilder.setContentIntent(pendingIntent);
-
-        int notificationId = 1;
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(notificationId, notificationBuilder.build());
-    }
-
-    private CharSequence getNotificationText(MomentDate momentDate) {
-        StringBuilder builder = new StringBuilder();
-        String[] reminderOptions = getResources().getStringArray(R.array.reminder_spinner_list);
-        String remindText = reminderOptions[momentDate.remind].replace(" before", "");
-        remindText = remindText.replace("One ", "");
-        if (remindText.equals("Day")) remindText = "Tomorrow";
-        else remindText = "Next " + remindText;
-
-        builder.append(remindText).append(", you have ").append(momentDate.title)
-                .append(". So, prepare yourself and have a good time. Be Happy!");
-        return builder.toString();
-    }*/
 
     private void handleActionGetMedia() {
         mRef = FirebaseDatabase.getInstance().getReference();
