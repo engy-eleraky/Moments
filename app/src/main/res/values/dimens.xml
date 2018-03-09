@@ -34,10 +34,6 @@
     <dimen name="margin_start_text">10dp</dimen>
 
 
-
-
-
-
     <!--tutorial-->
     <dimen name="layout_margin_bottom">54dp</dimen>
     <dimen name="text_size_tutorial">36sp</dimen>
