@@ -63,8 +63,7 @@
     <string name="email">email</string>
     <string name="name">name</string>
     <string name="title_activity_image_view">ImageViewActivity</string>
-
-
+    <string name="your_status">your status</string>
 
 
 </resources>

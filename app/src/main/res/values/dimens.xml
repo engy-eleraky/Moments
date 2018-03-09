@@ -16,9 +16,27 @@
     <dimen name="margin_top_register_2">60dp</dimen>
     <dimen name="margin_top_register_3">46dp</dimen>
     <dimen name="layout_width_login">368dp</dimen>
+    <dimen name="margin_bottom_login">100dp</dimen>
+    <dimen name="margin_top_login">100dp</dimen>
+    <dimen name="margin_start_login">120dp</dimen>
+
 
     <!--fragments-->
     <dimen name="margin_top_text">5dp</dimen>
+    <dimen name="layout_width">50dp</dimen>
+    <dimen name="layout_width_button">36dp</dimen>
+    <dimen name="layout_height">150dp</dimen>
+    <dimen name="layout_width_circle">56dp</dimen>
+    <dimen name="margin_end">20dp</dimen>
+    <dimen name="margin_start_recycle">80dp</dimen>
+    <dimen name="text_time">16sp</dimen>
+    <dimen name="margin_left">50dp</dimen>
+    <dimen name="margin_start_text">10dp</dimen>
+
+
+
+
+
 
     <!--tutorial-->
     <dimen name="layout_margin_bottom">54dp</dimen>
@@ -35,6 +53,13 @@
     <dimen name="nav_header_vertical_spacing">8dp</dimen>
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+
+    <!--settings-->
+    <dimen name="padding">6dp</dimen>
+    <dimen name="image_circle">200dp</dimen>
+    <dimen name="margin_top">18dp</dimen>
+
 
 
 </resources>

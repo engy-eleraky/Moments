@@ -6,7 +6,7 @@
     tools:context="com.example.admin.moments.navigation.CalendarFragment">
 
     <LinearLayout
-        android:padding="8dp"
+        android:padding="@dimen/padding"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -26,7 +26,7 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp">
+        android:layout_margin="@dimen/margin_top">
 
         <EditText
             android:id="@+id/titleInput"
@@ -52,9 +52,9 @@
         android:layout_height="wrap_content"
         android:text="@string/reminder"
         android:textAppearance="@android:style/TextAppearance.Holo.Medium"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginTop="@dimen/margin_top"
+        android:layout_marginLeft="@dimen/margin_top"
+        android:layout_marginRight="@dimen/margin_top"
         />
     <Spinner
         android:layout_width="match_parent"

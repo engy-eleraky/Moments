@@ -12,13 +12,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/status_toolBar"
-        android:layout_marginTop="27dp"
+        android:layout_marginTop="@dimen/margin_top_register_3"
         android:id="@+id/textInputLayoutStatus">
 
         <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="your status" />
+            android:hint="@string/your_status" />
     </android.support.design.widget.TextInputLayout>
 
     <Button
@@ -27,14 +27,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/textInputLayoutStatus"
-        android:layout_marginEnd="52dp"
-        android:layout_marginTop="55dp"
+        android:layout_marginEnd="@dimen/margin_top_register_3"
+        android:layout_marginTop="@dimen/margin_top_register_3"
         android:text="@string/save_status"
         android:contentDescription="@string/save_status"
         android:textAllCaps="false"
-        android:textSize="20sp"
+        android:textSize="@dimen/text_size"
         android:background="@color/colorPrimary"
-        android:padding="6dp"
+        android:padding="@dimen/padding"
         android:textColor="@color/white"/>
 
 </RelativeLayout>

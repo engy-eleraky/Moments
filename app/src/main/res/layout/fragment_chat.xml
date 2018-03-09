@@ -21,7 +21,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/layout_width"
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
         android:id="@+id/linear"
@@ -29,7 +29,7 @@
 
         <ImageButton
             android:id="@+id/PickerButton"
-            android:layout_width="36dp"
+            android:layout_width="@dimen/layout_width_button"
             android:layout_height="match_parent"
             android:contentDescription="@string/add_image"
             android:background="@drawable/ic_add_circle_outline_black_24dp" />
@@ -44,8 +44,8 @@
 
         <ImageButton
             android:id="@+id/sendButton"
-            android:layout_width="36dp"
-            android:layout_height="46dp"
+            android:layout_width="@dimen/layout_width_button"
+            android:layout_height="@dimen/margin_top_register_3"
             android:layout_gravity="bottom"
             android:background="@drawable/ic_send_black_24dp"
             android:enabled="false"

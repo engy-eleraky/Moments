@@ -13,11 +13,11 @@
     android:background="@color/pink"
     android:orientation="vertical">
         <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="@dimen/image_circle"
+            android:layout_height="@dimen/image_circle"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="35dp"
-            android:layout_marginBottom="30dp"
+            android:layout_marginTop="@dimen/margin_top_register_3"
+            android:layout_marginBottom="@dimen/margin_top_register_3"
             android:src="@drawable/icon"
             android:id="@+id/circleImageView"
             >
@@ -30,15 +30,15 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/display_name"
-            android:textSize="20sp"/>
+            android:textSize="@dimen/text_size"/>
 
         <TextView
             android:id="@+id/textViewHi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="41dp"
+            android:layout_marginTop="@dimen/margin_top_register_3"
             android:layout_gravity="center_horizontal"
-            android:textSize="20sp"
+            android:textSize="@dimen/text_size"
             android:text="@string/hi" />
 
         <Button
@@ -50,18 +50,18 @@
             android:contentDescription="@string/change_image"
             android:layout_marginTop="18dp"
             android:textAllCaps="false"
-            android:textSize="16sp"/>
+            android:textSize="@dimen/text_size_welcome"/>
 
         <Button
             android:id="@+id/buttonStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="@dimen/margin_top"
             android:text="@string/change_status"
             android:contentDescription="@string/change_status"
             android:textAllCaps="false"
-            android:textSize="16sp"/>
+            android:textSize="@dimen/text_size_welcome"/>
 
 
 </LinearLayout>
