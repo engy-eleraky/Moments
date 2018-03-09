@@ -42,7 +42,6 @@ public class CalendarFragment extends Fragment implements DatePickerDialog.OnDat
         AdapterView.OnItemSelectedListener{
     private OnFragmentInteractionListener mListener;
     private OnNewDateAddedListener dateAddedListener;
-   // private ShowListener calendarListener;
 
     private EditText titleInput;
     private Button dateButton;
@@ -137,9 +136,7 @@ public class CalendarFragment extends Fragment implements DatePickerDialog.OnDat
                         if (dateAddedListener != null) {
                             dateAddedListener.onNewDateAdded(momentDate);
                         }
-                       /* if ( calendarListener!= null){
-                            calendarListener.getCalendars(momentDate);
-                        }*/
+
                     }
 
 
@@ -186,12 +183,7 @@ public class CalendarFragment extends Fragment implements DatePickerDialog.OnDat
             throw new RuntimeException(context.toString()
                     + " must implement OnNewDateAddedListener");
         }
-       /* if (context instanceof ShowListener) {
-            calendarListener = (ShowListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnNewDateAddedListener");
-        }*/
+
     }
 
     @Override
@@ -240,7 +232,5 @@ public class CalendarFragment extends Fragment implements DatePickerDialog.OnDat
     interface OnNewDateAddedListener {
         void onNewDateAdded(MomentDate momentDate);
     }
-   /* interface ShowListener {
-        void getCalendars();
-    }*/
+
 }

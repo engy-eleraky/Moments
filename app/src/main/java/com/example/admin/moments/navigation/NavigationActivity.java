@@ -53,7 +53,7 @@ public class NavigationActivity extends AppCompatActivity
         CalendarFragment.OnFragmentInteractionListener ,
         MediaFragment.OnFragmentInteractionListener,
         CalendarFragment.OnNewDateAddedListener
-        //,ShowListener
+
 
          {
 
@@ -66,16 +66,12 @@ public class NavigationActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
-        /*getCalendars();
-         String prefs=PreferenceManager
-                 .getDefaultSharedPreferences(this)
-                 .getString("cal", "");*/
+
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
          //NOTE:  Checks first item in the navigation drawer initially
         navigationView.setCheckedItem(R.id.nav_chat);
-     //   navigationView.getMenu().add(prefs);
 
         View hView =  navigationView.getHeaderView(0);
         final TextView userText=hView.findViewById(R.id.userText);
@@ -232,39 +228,5 @@ public class NavigationActivity extends AppCompatActivity
     }
 
 
-   /* @Override
-    //show
-    public void getCalendars() {
-
-        //prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
-        String prefs=Utils.getCoupleCode(this);
-        DatabaseReference mRef=FirebaseDatabase.getInstance().getReference();
-        mRef.child(Utils.CHILD_COUPLES).child(prefs).child(Utils.CHILD_CALENDAR).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
-
-                ArrayList<MomentDate> events = new ArrayList<>();
-                while (iterator.hasNext()) {
-                    DataSnapshot eventSnapshot = iterator.next();
-                    MomentDate event = eventSnapshot.getValue(MomentDate.class);
-                     event.title.toString();
-
-                }
-
-
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(NavigationActivity.this);
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putString("cal", events.toString());
-                editor.apply();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-*/
 
 }
