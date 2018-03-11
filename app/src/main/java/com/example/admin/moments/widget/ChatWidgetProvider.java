@@ -15,32 +15,38 @@ import com.example.admin.moments.R;
  */
 
 public class ChatWidgetProvider extends AppWidgetProvider {
+
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        final String action = intent.getAction();
+        if (action.equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context.getApplicationContext());
+            ComponentName thisWidget = new ComponentName(context.getApplicationContext(), ChatWidgetProvider.class);
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetManager.getAppWidgetIds(thisWidget),R.id.list_view);
+            //int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+           // onUpdate(context, appWidgetManager, appWidgetIds);
+        }
+        super.onReceive(context, intent);
+
+    }
+
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         Intent intent = new Intent(context, ChatWidgetRemotViewService.class);
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_view);
 
-        for(int i = 0; i < appWidgetIds.length; i ++) {
-            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetIds[i]);
+        for (int appWidgetId : appWidgetIds) {
+            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
             intent.putExtra("Random", Math.random() * 1000);
             intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
-            views.setRemoteAdapter( R.id.list_view, intent);
-            appWidgetManager.updateAppWidget(appWidgetIds[i], views);
-            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds[i], R.id.list_view);
+            views.setRemoteAdapter(R.id.list_view, intent);
+            appWidgetManager.updateAppWidget(appWidgetId, views);
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.list_view);
 
         }
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        super.onReceive(context, intent);
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context.getApplicationContext());
-        ComponentName thisWidget = new ComponentName(context.getApplicationContext(), ChatWidgetProvider.class);
-        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-        onUpdate(context, appWidgetManager, appWidgetIds);
-    }
-
 
 
     @Override

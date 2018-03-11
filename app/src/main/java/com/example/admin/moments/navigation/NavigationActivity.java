@@ -52,10 +52,11 @@ public class NavigationActivity extends AppCompatActivity
         TimelineFragment.OnFragmentInteractionListener,
         CalendarFragment.OnFragmentInteractionListener ,
         MediaFragment.OnFragmentInteractionListener,
-        CalendarFragment.OnNewDateAddedListener
+        CalendarFragment.OnNewDateAddedListener,
+        ShowListener
 
 
-         {
+{
 
     private FirebaseAuth mAuth;
     private DatabaseReference mRef;
@@ -70,8 +71,10 @@ public class NavigationActivity extends AppCompatActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-         //NOTE:  Checks first item in the navigation drawer initially
+        //NOTE:  Checks first item in the navigation drawer initially
         navigationView.setCheckedItem(R.id.nav_chat);
+
+        getCalendars();
 
         View hView =  navigationView.getHeaderView(0);
         final TextView userText=hView.findViewById(R.id.userText);
@@ -124,12 +127,12 @@ public class NavigationActivity extends AppCompatActivity
         toggle.syncState();
 
 
-         if(savedInstanceState==null) {
-             //NOTE:  Open fragment1 initially.
-             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-             ft.replace(R.id.mainFrame, new ChatFragment());
-             ft.commit();
-         }
+        if(savedInstanceState==null) {
+            //NOTE:  Open fragment1 initially.
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.mainFrame, new ChatFragment());
+            ft.commit();
+        }
     }
 
 
@@ -217,16 +220,43 @@ public class NavigationActivity extends AppCompatActivity
     @Override
     public void onNewDateAdded(MomentDate momentDate) {
 
-       navigationView.getMenu().add(R.id.calendar_group,momentDate.getId(),0,momentDate.title);
+        navigationView.getMenu().add(R.id.calendar_group,momentDate.getId(),0,momentDate.title);
 
-       Fragment fragment=new ChatFragment();
+        Fragment fragment=new ChatFragment();
 
-       FragmentTransaction ft=getSupportFragmentManager().beginTransaction();
-       ft.replace(R.id.mainFrame,fragment);
-       ft.commit();
+        FragmentTransaction ft=getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.mainFrame,fragment);
+        ft.commit();
 
     }
 
 
+    @Override
+    public void getCalendars() {
+//prefs=PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Utils.COUPLE_KEYCODE,"");
+        String prefs=Utils.getCoupleCode(this);
+        DatabaseReference mRef=FirebaseDatabase.getInstance().getReference();
+        mRef.child(Utils.CHILD_COUPLES).child(prefs).child(Utils.CHILD_CALENDAR).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
+                MomentDate event=null;
+                ArrayList<MomentDate> events = new ArrayList<>();
+                while (iterator.hasNext()) {
+                    DataSnapshot eventSnapshot = iterator.next();
+                    event = eventSnapshot.getValue(MomentDate.class);
+                    navigationView.getMenu().add(R.id.calendar_group,event.getId(),0,event.title);
 
+                }
+
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 }

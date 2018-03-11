@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:gravity="center"
-        android:text="Or"
+        android:text="@string/or"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
 
     <TextView
@@ -60,7 +60,7 @@
             android:id="@+id/codeEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="_ _ _ _ _ _"
+            android:hint="@string/dots"
             android:drawableBottom="@drawable/bottom_line"
             android:inputType="text"
             android:gravity="center"/>

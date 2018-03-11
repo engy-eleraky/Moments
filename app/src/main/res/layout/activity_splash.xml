@@ -13,7 +13,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:src="@drawable/icon1"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/splash" />
 
     <TextView
         android:id="@+id/textView"
@@ -37,7 +38,8 @@
         android:layout_marginStart="@dimen/margin_start_image"
         android:layout_toEndOf="@+id/textView"
         app:srcCompat="@drawable/heart"
-        android:layout_marginRight="8dp"/>
+        android:layout_marginEnd="8dp"
+        android:contentDescription="@string/heart" />
 
 
 </RelativeLayout>

@@ -2,12 +2,13 @@ package com.example.admin.moments.navigation;
 
 
 import android.app.AlarmManager;
-import android.app.DatePickerDialog;
+//import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -33,16 +34,19 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 
+// DatePickerDialog.OnDateSetListener
+
 public class CalendarFragment extends Fragment implements DatePickerDialog.OnDateSetListener,
         AdapterView.OnItemSelectedListener{
     private OnFragmentInteractionListener mListener;
     private OnNewDateAddedListener dateAddedListener;
-
+   // private ShowListener calendarListener;
     private EditText titleInput;
     private Button dateButton;
     private Spinner reminderSpinner;
@@ -55,6 +59,7 @@ public class CalendarFragment extends Fragment implements DatePickerDialog.OnDat
     private DatabaseReference mRef;
     private String COUPLE_CODE;
 
+    DatePickerDialog datePickerDialog;
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -68,12 +73,19 @@ public class CalendarFragment extends Fragment implements DatePickerDialog.OnDat
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("date", dateButton.getText().toString());
+
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_calendar, container, false);
         if (mListener != null) {
-            mListener.onFragmentInteraction("Calendar");
+            mListener.onFragmentInteraction(Utils.CHILD_CALENDAR);
         }
 
         mRef = FirebaseDatabase.getInstance().getReference();
@@ -93,14 +105,23 @@ public class CalendarFragment extends Fragment implements DatePickerDialog.OnDat
             }
         });
 
-        final Calendar c = Calendar.getInstance();  // current date
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
+        if(savedInstanceState!=null){
+            //calendar
+            DatePickerDialog dpd = (DatePickerDialog) getActivity().getFragmentManager().findFragmentByTag("Datepickerdialog");
+            if(dpd != null) dpd.setOnDateSetListener(this);
+            String savedDate=savedInstanceState.getString("date");
+            dateButton.setText(savedDate);
+        }else{
+            final Calendar c = Calendar.getInstance();  // current date
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
 
-        String separator = "/";
-        dateAsText = String.valueOf(dayOfMonth) + separator + String.valueOf(month+1) + separator + String.valueOf(year);
-        dateButton.setText(dateAsText);
+            String separator = "/";
+            dateAsText = String.valueOf(day) + separator + String.valueOf(month+1) + separator + String.valueOf(year);
+            dateButton.setText(dateAsText);
+        }
+
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.reminder_spinner_list, android.R.layout.simple_spinner_item);
@@ -129,8 +150,6 @@ public class CalendarFragment extends Fragment implements DatePickerDialog.OnDat
                         dateRef.child(Utils.MOMENT_DATE_REMIND).setValue(momentDate.remind);
 
                         momentDate.setId((int) (noOfChildren+1));
-
-                       // Utils.setNearestAlarmActive(getActivity());
 
 
                         if (dateAddedListener != null) {
@@ -164,6 +183,7 @@ public class CalendarFragment extends Fragment implements DatePickerDialog.OnDat
             }
         });
 
+
         return view;
     }
 
@@ -184,20 +204,13 @@ public class CalendarFragment extends Fragment implements DatePickerDialog.OnDat
                     + " must implement OnNewDateAddedListener");
         }
 
+
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    @Override
-    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        String separator = "/";
-        dateAsText = String.valueOf(dayOfMonth) + separator + String.valueOf(month+1) + separator + String.valueOf(year);
-        dateButton.setText(dateAsText);
-
     }
 
     @Override
@@ -210,24 +223,32 @@ public class CalendarFragment extends Fragment implements DatePickerDialog.OnDat
 
     }
 
+
+
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(String title);
 
     }
 
-    public void showDatePickerDialog() {
-       /* newFragment = new DatePickerDialogFragment();
-        newFragment.show(getChildFragmentManager(), "datePicker");
-        newFragment.onDismiss(this);*/
-
-        final Calendar c = Calendar.getInstance();  // current date
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), this, year, month, day);
-        datePickerDialog.show();
+    @Override
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+        String separator = "/";
+        dateAsText = String.valueOf(dayOfMonth) + separator + String.valueOf(monthOfYear+1) + separator + String.valueOf(year);
+        dateButton.setText(dateAsText);
     }
+    public void showDatePickerDialog() {
+
+        Calendar now = Calendar.getInstance();
+        DatePickerDialog dpd = DatePickerDialog.newInstance(
+                this,
+                now.get(Calendar.YEAR),
+                now.get(Calendar.MONTH),
+                now.get(Calendar.DAY_OF_MONTH)
+        );
+        dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
+    }
+
+
 
     interface OnNewDateAddedListener {
         void onNewDateAdded(MomentDate momentDate);

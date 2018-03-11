@@ -19,6 +19,7 @@
     <dimen name="margin_top_login">100dp</dimen>
     <dimen name="margin_start_login">120dp</dimen>
 
+
     <!--fragments-->
     <dimen name="margin_top_text">5dp</dimen>
     <dimen name="layout_width">50dp</dimen>
@@ -36,8 +37,8 @@
     <dimen name="layout_margin_bottom">54dp</dimen>
     <dimen name="text_size_tutorial">36sp</dimen>
     <dimen name="text_size_tutorial_desc">30sp</dimen>
-    <dimen name="padding_left">10dp</dimen>
-    <dimen name="padding_right">2dp</dimen>
+    <dimen name="padding_start">10dp</dimen>
+    <dimen name="padding_end">2dp</dimen>
     <dimen name="text_margin_bottom">27dp</dimen>
     <dimen name="text_margin_start">132dp</dimen>
 

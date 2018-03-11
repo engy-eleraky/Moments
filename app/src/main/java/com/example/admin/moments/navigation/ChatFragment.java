@@ -49,7 +49,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.google.gson.Gson;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -64,7 +63,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import id.zelory.compressor.Compressor;
+//import id.zelory.compressor.Compressor;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -476,7 +475,7 @@ public class ChatFragment extends Fragment {
         int id = item.getItemId();
         if (id == R.id.widgetId) {
 
-            sendBroadcast();
+           sendBroadcast();
             return true;
         }
         return super.onOptionsItemSelected(item);

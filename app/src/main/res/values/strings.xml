@@ -64,6 +64,31 @@
     <string name="name">name</string>
     <string name="title_activity_image_view">ImageViewActivity</string>
     <string name="your_status">your status</string>
+    <string name="or">Or</string>
+    <string name="dots">_ _ _ _ _ _</string>
+    <string name="chat">Chat</string>
+    <string name="timeline">Timeline</string>
+    <string name="media">Media</string>
+    <string name="calendar">Calendar</string>
+    <string name="new_date">New Date</string>
+    <string name="add_widget">add widget</string>
+    <string name="enter_text">enter text</string>
+    <string name="settings">settings</string>
+    <string name="android_studio">Android Studio</string>
+    <string name="android_studio_android_com">android.studio@android.com</string>
+    <string name="logout">logout</string>
+    <string name="todo">TODO</string>
+    <string name="splash">splash</string>
+    <string name="heart">heart</string>
+    <string name="cancelbutton">cancelbutton</string>
+    <string name="donebutton">donebutton</string>
+    <string name="first">first</string>
+    <string name="mediaitem">mediaitem</string>
+    <string name="itemimage">itemimage</string>
+    <string name="item_image">item_image</string>
+    <string name="second">second</string>
+    <string name="third">third</string>
+    <string name="timelineimage">timelineimage</string>
 
 
 </resources>

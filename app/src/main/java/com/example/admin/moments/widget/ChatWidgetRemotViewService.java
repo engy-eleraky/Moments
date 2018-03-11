@@ -71,7 +71,7 @@ public class ChatWidgetRemotViewService  extends RemoteViewsService {
         @Override
         public void onDataSetChanged() {
 
-            mCountDownLatch = new CountDownLatch(0);
+            mCountDownLatch = new CountDownLatch(1);
             loadMessages();
             try {
                 mCountDownLatch.await();
@@ -135,6 +135,14 @@ public class ChatWidgetRemotViewService  extends RemoteViewsService {
         }
         private void loadMessages() {
             if(mCountDownLatch.getCount()==0) {
+                //update
+                Intent updateWidgetIntent = new Intent(context,
+                        ChatWidgetProvider.class);
+                updateWidgetIntent.setAction(
+                        "android.appwidget.action.APPWIDGET_UPDATE\"");
+                context.sendBroadcast(updateWidgetIntent);
+            }else{
+
                 if (mAuth.getCurrentUser() != null) {
 
                     mReference = FirebaseDatabase.getInstance().getReference().child(Utils.CHILD_COUPLES);
@@ -158,16 +166,10 @@ public class ChatWidgetRemotViewService  extends RemoteViewsService {
 
                         }
                     });
+                    mCountDownLatch.countDown();
 
                 }
-                mCountDownLatch.countDown();
-            }else{
-              //update
-                Intent updateWidgetIntent = new Intent(context,
-                        ChatWidgetProvider.class);
-                updateWidgetIntent.setAction(
-                        "android.appwidget.action.APPWIDGET_UPDATE\"");
-                context.sendBroadcast(updateWidgetIntent);
+
             }
 
         }
