@@ -6,9 +6,11 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+
 import android.widget.RemoteViews;
 
 import com.example.admin.moments.R;
+
 
 /**
  * Created by ADMIN on 3/5/2018.
@@ -24,25 +26,28 @@ public class ChatWidgetProvider extends AppWidgetProvider {
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context.getApplicationContext());
             ComponentName thisWidget = new ComponentName(context.getApplicationContext(), ChatWidgetProvider.class);
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetManager.getAppWidgetIds(thisWidget),R.id.list_view);
-            //int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-           // onUpdate(context, appWidgetManager, appWidgetIds);
-        }
+            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+           onUpdate(context, appWidgetManager, appWidgetIds);
+       }
         super.onReceive(context, intent);
 
     }
 
     @Override
-    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        Intent intent = new Intent(context, ChatWidgetRemotViewService.class);
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_view);
+    public void onUpdate(Context context, final AppWidgetManager appWidgetManager, final int[] appWidgetIds) {
+        final Intent intent = new Intent(context, ChatWidgetRemotViewService.class);
+        final RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_view);
 
-        for (int appWidgetId : appWidgetIds) {
+        for (final int appWidgetId : appWidgetIds) {
             intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
             intent.putExtra("Random", Math.random() * 1000);
             intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
+
+
             views.setRemoteAdapter(R.id.list_view, intent);
-            appWidgetManager.updateAppWidget(appWidgetId, views);
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.list_view);
+            appWidgetManager.updateAppWidget(appWidgetId, views);
+
 
         }
         super.onUpdate(context, appWidgetManager, appWidgetIds);
@@ -63,4 +68,5 @@ public class ChatWidgetProvider extends AppWidgetProvider {
     public void onDisabled(Context context) {
         super.onDisabled(context);
     }
+
 }

@@ -2,6 +2,7 @@ package com.example.admin.moments.widget;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -17,8 +18,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -47,8 +51,7 @@ public class ChatWidgetRemotViewService  extends RemoteViewsService {
     @Override
     public void onCreate() {
         super.onCreate();
-        mAuth = FirebaseAuth.getInstance();
-        mUser=mAuth.getCurrentUser().getUid();
+
 
     }
 
@@ -71,12 +74,55 @@ public class ChatWidgetRemotViewService  extends RemoteViewsService {
         @Override
         public void onDataSetChanged() {
 
+
+
             mCountDownLatch = new CountDownLatch(1);
-            loadMessages();
+            loadMessagesWidget();
             try {
                 mCountDownLatch.await();
             } catch (InterruptedException e) {
                 e.printStackTrace();
+            }
+
+        }
+
+        private void loadMessagesWidget(){
+            if(mCountDownLatch.getCount()==0){
+
+            }else {
+                //load data
+                mAuth = FirebaseAuth.getInstance();
+                mUser = mAuth.getCurrentUser().getUid();
+                if (mAuth.getCurrentUser() != null) {
+
+                    mReference = FirebaseDatabase.getInstance().getReference().child(Utils.CHILD_COUPLES);
+                    String prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(Utils.COUPLE_KEYCODE, "");
+
+                    mRefMessages = mReference.child(prefs).child(Utils.CHILD_CHAT).child(Utils.CHILD_MESSAGES);
+
+                    mRefMessages.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Iterator<DataSnapshot> messages = dataSnapshot.getChildren().iterator();
+                            while (messages.hasNext()) {
+                                message = messages.next().getValue(Messages.class);
+
+                                messagesList.add(message);
+
+
+                            }
+                            mCountDownLatch.countDown();
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+
             }
 
         }
@@ -133,47 +179,9 @@ public class ChatWidgetRemotViewService  extends RemoteViewsService {
         public boolean hasStableIds() {
             return false;
         }
-        private void loadMessages() {
-            if(mCountDownLatch.getCount()==0) {
-                //update
-                Intent updateWidgetIntent = new Intent(context,
-                        ChatWidgetProvider.class);
-                updateWidgetIntent.setAction(
-                        "android.appwidget.action.APPWIDGET_UPDATE\"");
-                context.sendBroadcast(updateWidgetIntent);
-            }else{
 
-                if (mAuth.getCurrentUser() != null) {
-
-                    mReference = FirebaseDatabase.getInstance().getReference().child(Utils.CHILD_COUPLES);
-                    String prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(Utils.COUPLE_KEYCODE, "");
-
-                    mRefMessages = mReference.child(prefs).child(Utils.CHILD_CHAT).child(Utils.CHILD_MESSAGES);
-                    mRefMessages.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-
-                            Iterator<DataSnapshot> messages = dataSnapshot.getChildren().iterator();
-                            while (messages.hasNext()) {
-                                message = messages.next().getValue(Messages.class);
-                                messagesList.add(message);
-
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                    mCountDownLatch.countDown();
-
-                }
-
-            }
-
-        }
     }
+
 
 
 }

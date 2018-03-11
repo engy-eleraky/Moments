@@ -1,5 +1,7 @@
 package com.example.admin.moments.models;
 
+import java.io.Serializable;
+
 /**
  * Created by ADMIN on 2/25/2018.
  */
