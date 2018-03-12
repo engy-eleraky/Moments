@@ -1,12 +1,19 @@
 apply plugin: 'com.android.application'
 
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+
 android {
     signingConfigs {
         config {
-            keyAlias 'udacity'
-            keyPassword 'passward'
-            storeFile file('$rootDir/keystore.jks')
-            storePassword 'passward'
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+
+
         }
     }
     compileSdkVersion 27
@@ -44,7 +51,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:11.8.0'
     implementation 'com.google.firebase:firebase-storage:11.8.0'
     implementation 'com.squareup.okhttp:okhttp:2.5.0'
-    implementation 'com.google.code.gson:gson:2.6.2'
 
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.6.0'
