@@ -117,11 +117,11 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         String type=message.getType();
         if(type.equals("text")){
             vh1.mTextMessage.setText(message.getMessages());
-            vh1.mImageMessage.setVisibility(View.INVISIBLE);
+           // vh1.mImageMessage.setVisibility(View.INVISIBLE);
 
         }else{
             vh1.mTextMessage.setVisibility(View.INVISIBLE);
-            Picasso.with(context).load(message.getMessages()).networkPolicy(NetworkPolicy.OFFLINE)
+            /*Picasso.with(context).load(message.getMessages()).networkPolicy(NetworkPolicy.OFFLINE)
                     .placeholder(R.drawable.icon).into(vh1.mImageMessage, new Callback() {
                 @Override
                 public void onSuccess() {
@@ -133,10 +133,10 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                     Picasso.with(context).load(message.getMessages()).placeholder(R.drawable.icon).into(vh1.mImageMessage);
                 }
-            });
+            });*/
 
         }
-        vh1.mTextTime.setText(message.getTime());
+       // vh1.mTextTime.setText(message.getTime());
 
 
     }
@@ -182,11 +182,11 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         String type=message.getType();
         if(type.equals("text")){
             vh2.mTextMessage1.setText(message.getMessages());
-            vh2.mImageMessage1.setVisibility(View.INVISIBLE);
+           // vh2.mImageMessage1.setVisibility(View.INVISIBLE);
 
         }else{
             vh2.mTextMessage1.setVisibility(View.INVISIBLE);
-            Picasso.with(context).load(message.getMessages()).networkPolicy(NetworkPolicy.OFFLINE)
+            /*Picasso.with(context).load(message.getMessages()).networkPolicy(NetworkPolicy.OFFLINE)
                     .placeholder(R.drawable.icon).into(vh2.mImageMessage1, new Callback() {
                 @Override
                 public void onSuccess() {
@@ -200,9 +200,9 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     Picasso.with(context).load(message.getMessages()).placeholder(R.drawable.icon).into(vh2.mImageMessage1);
                 }
             });
-
+*/
         }
-        vh2.mTextTime1.setText(message.getTime());
+        //vh2.mTextTime1.setText(message.getTime());
 
     }
 
@@ -232,13 +232,13 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private TextView mTextMessage;
         private TextView mTextTime;
         private CircleImageView mImage;
-        private ImageView mImageMessage;
+      //  private ImageView mImageMessage;
         public UserViewHolder(View itemView) {
             super(itemView);
             mTextMessage=itemView.findViewById(R.id.textmessage);
             mTextTime=itemView.findViewById(R.id.time);
             mImage=itemView.findViewById(R.id.circleImageMessage);
-            mImageMessage=itemView.findViewById(R.id.messageImage);
+           // mImageMessage=itemView.findViewById(R.id.messageImage);
 
         }
     }
@@ -247,14 +247,14 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private TextView mTextMessage1;
         private TextView mTextTime1;
         private CircleImageView mImage1;
-        private ImageView mImageMessage1;
+        //private ImageView mImageMessage1;
 
         public PartnerViewHolder(View itemView) {
             super(itemView);
             mTextMessage1=itemView.findViewById(R.id.textmessage1);
             mTextTime1=itemView.findViewById(R.id.time1);
             mImage1=itemView.findViewById(R.id.circleImageMessage1);
-            mImageMessage1=itemView.findViewById(R.id.messageImage1);
+           // mImageMessage1=itemView.findViewById(R.id.messageImage1);
 
         }
     }

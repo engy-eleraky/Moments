@@ -2,8 +2,9 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/layout_height"
+    android:layout_marginStart="20dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:padding="@dimen/padding_start">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -13,41 +14,41 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:src="@drawable/icon" />
-    <LinearLayout
+
+    <RelativeLayout
+        android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginEnd="@dimen/margin_end"
+        android:layout_marginEnd="8dp"
         android:layout_toStartOf="@+id/circleImageMessage1"
-        android:background="@drawable/text_view_shape"
-        android:id="@+id/linearLayout">
+        android:background="@drawable/text_view_shape">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size"
-            android:text="@string/message_text"
-            android:id="@+id/textmessage1"
-            android:layout_marginStart="@dimen/margin_start_text"
-            android:layout_marginBottom="@dimen/margin_top_text"
-            android:layout_marginTop="@dimen/margin_top_text"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
+        <!-- <ImageView
             android:id="@+id/messageImage1"
-            android:layout_margin="@dimen/margin_top_text"
-            android:contentDescription="@string/item_image" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@string/item_image"
+            android:scaleType="centerCrop" />
+-->
+        <TextView
+            android:id="@+id/textmessage1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/time1"
+            android:text="@string/message_text"
+            android:textSize="22sp" />
 
         <TextView
             android:id="@+id/time1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_top_text"
-            android:layout_marginStart="@dimen/margin_left"
-            android:text="@string/message_time"
-            android:textSize="@dimen/text_time" />
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/textmessage1"
+            android:layout_marginEnd="12dp"
+            android:text="11:45"
+            android:textSize="16sp" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

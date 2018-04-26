@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey"
+    android:background="@drawable/heart"
     tools:context="com.example.admin.moments.navigation.ChatFragment">
 
    <android.support.v4.widget.SwipeRefreshLayout
@@ -25,7 +25,7 @@
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
         android:id="@+id/linear"
-        android:background="@color/white">
+        android:background="@color/activeDots">
 
         <ImageButton
             android:id="@+id/PickerButton"

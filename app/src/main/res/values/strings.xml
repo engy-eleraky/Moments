@@ -57,7 +57,7 @@
     <string name="send_message">send message</string>
     <string name="post">post</string>
     <string name="message_text">TextView</string>
-    <string name="message_time">4/3/2018 11:45:5 AM</string>
+    <string name="message_time">11:45 AM</string>
     <string name="post_time">4/3/2018</string>
     <string name="passward">passward</string>
     <string name="email">email</string>
@@ -72,7 +72,7 @@
     <string name="calendar">Calendar</string>
     <string name="new_date">New Date</string>
     <string name="add_widget">add widget</string>
-    <string name="enter_text">enter text</string>
+    <string name="enter_text">Type a mess.....</string>
     <string name="settings">settings</string>
     <string name="android_studio">Android Studio</string>
     <string name="android_studio_android_com">android.studio@android.com</string>
